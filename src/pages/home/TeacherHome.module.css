@@ -1,0 +1,105 @@
+/* Reset default margins and padding */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.main {
+  width: 100vw; /* Use viewport width instead of percentage */
+  min-height: 100vh;
+  display: flex;
+  overflow: hidden;
+  margin: 0; /* Explicitly remove any margin */
+  padding: 0; /* Explicitly remove any padding */
+}
+
+.sidebarContainer {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  background-color: white;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+.contentArea {
+  flex: 1;
+  overflow-y: auto;
+  height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.contentWrapper {
+  padding: 20px;
+}
+
+/* Remove any padding/margin from the Header component's container */
+.contentArea > :first-child {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.dashboard {
+  background-color: rgb(237, 242, 255);
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+}
+
+.dashboard h2 {
+  color: #333;
+  font-size: 24px;
+  margin: 0;
+}
+
+.wrapper2 {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.card {
+  background: linear-gradient(270deg, #3ab43e, #51d233);
+  border-radius: 24px;
+  padding: 20px;
+  width: 320px;
+  height: 160px;
+  transition: all 0.48s cubic-bezier(0.23, 1, 0.32, 1);
+  overflow: hidden;
+}
+
+.content {
+  color: white;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.heading {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.para {
+  line-height: 1.5;
+  font-size: 14px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  margin: 0;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 13px rgba(0,0,0,0.1),
+    0 24px 24px rgba(0,0,0,0.09),
+    0 55px 33px rgba(0,0,0,0.05),
+    0 97px 39px rgba(0,0,0,0.01);
+}

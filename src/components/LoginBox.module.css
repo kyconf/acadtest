@@ -1,0 +1,108 @@
+.loginBox {
+    border-radius: 40px;
+    border-color: white;
+    border-style: solid;
+    padding: 55px 35px;
+    margin: 15px;
+    max-width: 350px;
+    background-color: white;
+    color: black;
+    scale: 1.3;
+    display: block;
+    text-align: center;
+    margin-top: 3vh;
+    overflow: hidden; /* Prevent content from overflowing */
+    box-shadow: 0px 2px 5px 5px rgb(217, 217, 217);
+    user-select: none;
+    -webkit-user-select: none; /* For Safari */
+    -ms-user-select: none;    /* For IE/Edge */
+    -moz-user-select: none;   /* For Firefox */
+}
+
+h1 {
+    font-size: 25px;
+    text-align: center;
+}
+
+.wrap input {
+
+    background: rgb(221, 221, 221);
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 15px;
+    box-shadow: #cff0ff 0px 10px 10px -5px;
+    color: black;
+    font-size: 12px;
+   
+}
+
+.login { 
+    margin-top: 15px;
+    background: rgb(49, 123, 251);
+    
+    border-radius: 10px;
+    font-size: 12px;
+    width: 100%;
+    box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 20px 10px -15px;
+    transition: all 0.2s ease-in-out;
+}
+.createAcc {
+    color: gray;
+    padding: 5px 10px;
+    display: inline; /* Shrinks the box to fit its content */
+    font-size: 10px;
+    margin-left: 2px;
+    
+    
+}
+
+.createAcc:hover {
+    cursor: pointer;
+}
+
+.login:hover {
+    transform: scale(1.03);
+    box-shadow: rgba(133, 189, 215, 0.8) 0px 23px 10px -20px;
+    will-change: box-shadow;
+  }
+
+  .student {
+    height: 5rem;
+    margin-left: 0px;
+    mix-blend-mode:multiply;
+
+  }
+
+  .hole {
+    border-style: solid;
+    border-radius: 50px;
+    margin-top: -30px;
+    margin-bottom: 30px;
+    width: 50px;
+    margin-left: 3.94rem; 
+    background-color: #e1e1e1;
+    padding: 1px;
+    border-color: #dadada;
+  }
+
+  .message {
+    color: red;
+    font-style:italic;
+    font-size: 12px;
+    margin-top: 10px;
+    padding: 0px;
+  }
+
+  .bar {
+    position: absolute;
+    left: -10px;
+    
+  }
+
+  .barcode {
+    height: 7.2rem;
+    width: 20rem;
+    mix-blend-mode:multiply;
+
+  }

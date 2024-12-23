@@ -1,0 +1,9 @@
+.con {
+   
+    display: flex; /* Enables Flexbox */
+    justify-content: center; /* Centers child horizontally */
+    align-items: center; /* Centers child vertically */
+    height: 100vh; /* Makes container take full viewport height */
+    width: 100vw; /* Makes container take full viewport width */
+    background-color: #f0f0f0; /* Optional for debugging */
+}

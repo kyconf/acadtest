@@ -1,0 +1,28 @@
+.main {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    overflow: hidden;
+}
+
+.sidebarContainer {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    background-color: white;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+}
+
+.contentArea {
+    flex: 1;
+    overflow-y: auto;
+    height: 100vh;
+    padding: 20px;
+}
+
+.textbox {
+    border-radius: 50px;
+    width: 10vw;
+    padding: 20px;
+}

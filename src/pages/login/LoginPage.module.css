@@ -1,0 +1,147 @@
+.main {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    overflow: hidden;
+}
+
+.sidebarContainer {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    background-color: white;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+}
+
+.contentArea {
+    flex: 1;
+    overflow-y: auto;
+    height: 100vh;
+    padding: 20px;
+}
+
+.students {
+    border-collapse: collapse; /* Remove gaps between cells */
+    
+}
+
+.table {
+    justify-content: center;
+    text-align: center;
+    align-items:center;
+    margin-top: 10vh;
+    max-height: 70vh; /* Limit the height of the table container */
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    border: 1px solid #ccc; /* Optional: Add a border for clarity */
+
+}
+
+
+td {
+    border-style:solid;
+
+}
+
+.twrapper {
+  width: 100%;
+  margin-top: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.examlist {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  font-size: 14px;
+  table-layout: fixed;
+  margin: 0;
+  border-spacing: 0;
+}
+
+.header th {
+  position: sticky;
+  top: 0;
+  background-color: #f9fafb;
+  color: #374151;
+  font-weight: 600;
+  padding: 12px 24px;
+  text-align: left;
+  z-index: 2;
+  border: none;
+  margin: 0;
+  height: 50px;
+}
+
+.examRow td {
+  border: 1px solid #f0f0f0 !important;
+  padding: 12px 24px;
+  margin: 0;
+  background-color: white;
+  height: 50px;
+  position: relative;
+  top: 0;
+}
+
+.examlist tbody {
+  position: relative;
+  top: -2px;
+}
+
+.examRow td + td {
+  border-left: none !important;
+}
+
+.examlist td:first-child,
+.examlist th:first-child {
+  width: 48px;
+  text-align: center;
+  padding: 12px 0;
+}
+
+.uicheckbox {
+  margin: 0;
+  vertical-align: middle;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: #fff;
+  border: 2px solid #d1d5db;
+  border-radius: 4px;
+  position: relative;
+  transition: all 0.2s ease-in-out;
+}
+
+.uicheckbox:checked {
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+.uicheckbox:checked::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.uicheckbox:hover {
+  border-color: #2563eb;
+}
+
+.uicheckbox:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
