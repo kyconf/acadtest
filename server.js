@@ -1,10 +1,10 @@
-import dotenv from 'dotenv';
+
 
 import express from 'express';
 import mysql from 'mysql2'
 import cors from 'cors';
 import OpenAI from 'openai';
-dotenv.config({ path: './.env'});
+
 
 const app = express();
 
