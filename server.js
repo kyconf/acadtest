@@ -1,11 +1,12 @@
-
+import dotenv from 'dotenv';
 
 import express from 'express';
 import mysql from 'mysql2'
 import cors from 'cors';
 import OpenAI from 'openai';
-
-
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config();
+}
 const app = express();
 
 app.use(cors()); // Enables CORS for all origins
