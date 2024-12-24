@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styles from './LoginBox.module.css'
 import student from '../assets/student.svg';
 import barcode from '../assets/barcode.png';
+import { API_URL } from '../../config/config';
 
 
 function LoginBox() {
@@ -24,10 +25,9 @@ function LoginBox() {
 
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent form from reloading the page
-    console.log('Form submitted'); 
+    e.preventDefault();
     try {
-      const response = await fetch('/login', { //3000 /login
+      const response = await fetch(`${API_URL}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -35,15 +35,15 @@ function LoginBox() {
         body: JSON.stringify(formData),
       });
 
-      const data = await response.json();
-
       if (response.ok) {
-        setMessage(data.message); // Show success message
-        // Save user information or token if needed
-        localStorage.setItem('user', JSON.stringify(data.user));
-        navigate('/dashboard'); // Navigate to a dashboard or another route
+        const data = await response.json();
+        // Handle successful login
+        if (data.message === 'Login successful') {
+          navigate('/dashboard');
+        }
       } else {
-        setMessage(data.message); // Show error message
+        const errorData = await response.json();
+        setMessage(errorData.message || 'Login failed');
       }
     } catch (error) {
       console.error('Error during login:', error);
