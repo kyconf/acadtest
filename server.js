@@ -294,6 +294,60 @@ async function createExam(title, module, duration) { //get specific user by putt
   return result;
 }
 
+// Add this function to create the table
+async function initializeDatabase() {
+    try {
+        // Users table
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS users (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                username VARCHAR(255) UNIQUE NOT NULL,
+                password VARCHAR(255) NOT NULL,
+                email VARCHAR(255) UNIQUE NOT NULL,
+                created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+            )
+        `);
+
+        // Exams table
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS exams (
+                exam_id INT AUTO_INCREMENT PRIMARY KEY,
+                title VARCHAR(255) NOT NULL,
+                module TEXT,
+                created_by INT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                duration INT,
+                FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE
+            )
+        `);
+
+        // Questions table
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS questions (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                exam_id INT NOT NULL,
+                section VARCHAR(255) NOT NULL,
+                module INT,
+                number INT,
+                passage TEXT,
+                content TEXT,
+                choice_A TEXT,
+                choice_B TEXT,
+                choice_C TEXT,
+                choice_D TEXT,
+                correct_answer CHAR(1),
+                FOREIGN KEY (exam_id) REFERENCES exams(exam_id) ON DELETE CASCADE
+            )
+        `);
+
+        console.log("Database initialized successfully");
+    } catch (err) {
+        console.error("Error initializing database:", err);
+    }
+}
+
+// Call this function before starting the server
+await initializeDatabase();
 
 (async () => {
     // Test the connection
