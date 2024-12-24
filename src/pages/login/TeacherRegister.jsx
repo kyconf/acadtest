@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { API_URL } from '../../config/config';
 
 
 
@@ -35,7 +36,7 @@ function LoginPage() {
     e.preventDefault(); // Prevent form from reloading the page
 
     try {
-      const response = await fetch('/a-register', { //port 3000 /a-register
+      const response = await fetch(`${API_URL}/a-register`, { //port 3000 /a-register
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

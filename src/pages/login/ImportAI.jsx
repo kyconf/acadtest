@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../components/Sidebar';
 import styles from './ImportAI.module.css';
+import { API_URL } from '../../config/config';
 
 
 
@@ -46,7 +47,7 @@ function ImportAI() {
         return;
       }
       try {
-        const response = await fetch('/openai', {
+        const response = await fetch(`${API_URL}/openai`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -73,7 +74,7 @@ function ImportAI() {
     useEffect(() => {
         async function fetchExams() {
             try {
-                const response = await fetch('/openai/response'); // Fetch data from the backend 3000 login
+                const response = await fetch(`${API_URL}/openai/response`); // Fetch data from the backend 3000 login
                 if (!response.ok) { 
                     throw new Error(`Error: ${response.statusText}`); // Handle HTTP errors
                 }

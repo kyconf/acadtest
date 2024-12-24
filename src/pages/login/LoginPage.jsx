@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../components/Sidebar';
 import styles from './LoginPage.module.css'
+import { API_URL } from '../../config/config';
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -50,7 +51,7 @@ function LoginPage() {
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const response = await fetch('/login');
+        const response = await fetch(`${API_URL}/login`);
         if (!response.ok) { 
           throw new Error(`Error: ${response.statusText}`);
         }

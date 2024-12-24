@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { API_URL } from '../../config/config';
 
 import SunEditor from 'suneditor-react';
 import 'suneditor/dist/css/suneditor.min.css'; // Import SunEditor styles
@@ -30,7 +31,7 @@ function CreatePage() {
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const response = await fetch('/exams'); // Fetch data from the backend 3000 login
+        const response = await fetch(`${API_URL}/exams`); // Fetch data from the backend 3000 login
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`); // Handle HTTP errors
         }
@@ -72,7 +73,7 @@ function CreatePage() {
     // Add function to fetch exams
     const fetchExams = async () => {
       try {
-        const response = await fetch('/exams');
+        const response = await fetch(`${API_URL}/exams`);
         if (response.ok) {
           const data = await response.json();
           setExams(data);
@@ -91,7 +92,7 @@ function CreatePage() {
       e.preventDefault(); // Add this to prevent form default submission
 
       try {
-        const response = await fetch('/exams', {
+        const response = await fetch(`${API_URL}/exams`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
