@@ -117,32 +117,39 @@ app.post('/exams', async (req, res) =>  {
 
 app.post('/login', async (req, res) =>  {
     const { username, password } = req.body;
+    console.log('Login attempt:', { username, password }); // Log the incoming request
 
-  try {
-    // Use the getUser function to fetch the user's data by username
-    const [rows] = await db.query(`
-      SELECT username, password
-      FROM users
-      WHERE username = ?
-    `, [username]);
+    try {
+        const [rows] = await db.query(`
+            SELECT username, password
+            FROM users
+            WHERE username = ?
+        `, [username]);
 
-    if (rows.length === 0) {
-      return res.status(401).json({ message: 'Invalid username or password' });
+        console.log('Database response:', rows); // Log the database response
+
+        if (rows.length === 0) {
+            console.log('No user found');
+            return res.status(401).json({ message: 'Invalid username or password' });
+        }
+
+        const user = rows[0];
+        console.log('Found user:', user); // Log the found user
+
+        if (user.password !== password) {
+            console.log('Password mismatch');
+            return res.status(401).json({ message: 'Invalid username or password' });
+        }
+
+        console.log('Login successful');
+        res.status(200).json({ message: 'Login successful', user: { username: user.username } });
+    } catch (error) {
+        console.error('Login error details:', error); // Log detailed error
+        res.status(500).json({ 
+            message: 'An unexpected error occurred.', 
+            error: error.message 
+        });
     }
-
-    const user = rows[0];
-
-    // Compare the provided password with the one from the database (no hashing here yet)
-    if (user.password !== password) {
-      return res.status(401).json({ message: 'Invalid username or password' });
-    }
-
-    // Return success if validation passes
-    res.status(200).json({ message: 'Login successful', user: { username: user.username } });
-  } catch (error) {
-    console.error('Error during login:', error);
-    res.status(500).json({ message: 'An unexpectedasd error occurred.' });
-  }
 });
 
 app.get('/register', (req, res) =>  {
