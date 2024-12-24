@@ -85,16 +85,31 @@ app.get('/exams', async (req, res) =>  { //gets the info
 });
 
 app.post('/exams', async (req, res) =>  {
-  const { title, module, duration } = req.body;
+    const { title, module, duration } = req.body;
 
-  try {
-      const result = await createExam(title, module, duration);
-      res.status(201).json({ message: 'Exam created successfully!', result });
-  } catch (error) {
-      console.error('Error registering user:', error);
-      res.status(500).json({ message: 'Error registering exam!', error });
-  }
-  
+    try {
+        console.log('Creating exam:', { title, module, duration });
+        const result = await createExam(title, module, duration);
+        
+        // Release connection explicitly if needed
+        if (result.connection) result.connection.release();
+        
+        res.status(201).json({ 
+            message: 'Exam created successfully!', 
+            result: {
+                exam_id: result.insertId,
+                title,
+                module,
+                duration
+            }
+        });
+    } catch (error) {
+        console.error('Error creating exam:', error);
+        res.status(500).json({ 
+            message: 'Error creating exam!', 
+            error: error.message 
+        });
+    }
 });
 
 
@@ -243,6 +258,15 @@ const db = mysql.createPool({
   port: process.env.DB_PORT || 3306,
 }).promise();
 
+// Add connection pool error handling
+db.on('error', function(err) {
+    console.error('Database pool error:', err);
+    if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+        console.log('Attempting to reconnect to database...');
+        // Attempt to reconnect
+        testConnection();
+    }
+});
 
   async function getUserInfo() {
     const [rows] = await db.query("SELECT * FROM users"); // make sure its the same name in mysql
@@ -252,9 +276,25 @@ const db = mysql.createPool({
   
 
 
-  async function getExams() { //get specific user by putting a parameter
-    const [rows] = await db.query("SELECT exam_id, title, module, created_by,  DATE_FORMAT(created_at, '%Y-%m-%d %H:%i:%s') AS created_at, duration FROM exams"); // make sure its the same name in mysql
-    return rows;
+  async function getExams() {
+    try {
+        const [rows] = await db.query(`
+            SELECT 
+                exam_id, 
+                title, 
+                module, 
+                created_by,  
+                DATE_FORMAT(created_at, '%Y-%m-%d %H:%i:%s') AS created_at, 
+                duration 
+            FROM exams
+            ORDER BY created_at DESC
+            LIMIT 100
+        `);
+        return rows;
+    } catch (error) {
+        console.error('Error in getExams:', error);
+        throw error;
+    }
   }
 
   async function testConnection() {
