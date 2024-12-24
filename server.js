@@ -46,9 +46,13 @@ app.get('/', (req, res) =>  {
 
 
 app.get('/login', async (req, res) =>  { //gets the info
-    const users = await getUserInfo();
-  
-    res.json(users)
+    try {
+      const users = await getUserInfo();
+      res.json(users);
+  } catch (error) {
+      console.error('Database error:', error);
+      res.status(500).json({ error: 'Database connection failed' });
+  }
 });
 
 
@@ -232,12 +236,12 @@ lastResponse = [
 
 // This entire section is for connecting to the database itself. Please place info into .env file later.
 const db = mysql.createPool({
-    host: "localhost",
-    user: "root", // Your MySQL username
-    password: "myr00tp4$$w0rdus3r", // Your MySQL password rootuser sqlacadsite$12
-    database: "auth_db", // Your database name
-    port: 3050,
-  }).promise();
+  host: process.env.DB_HOST || 'localhost',
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || '',
+  database: process.env.DB_NAME || 'auth_db',
+  port: process.env.DB_PORT || 3306,
+}).promise();
 
 
   async function getUserInfo() {
@@ -259,6 +263,7 @@ const db = mysql.createPool({
         console.log("Connected to MySQL database.");
     } catch (err) {
         console.error("Error connecting to MySQL:", err);
+        return false;
     }
 }
 
@@ -295,13 +300,13 @@ async function createExam(title, module, duration) { //get specific user by putt
     await testConnection();
   const users = await getUserInfo();
   const exams = await getExams();
-  console.log("OpenAI API Key:", process.env.OPENAI_API_KEY);
+  
 })();
   
 
 
-
+const PORT = process.env.PORT || 3000;
 app.listen(3000, () => {
-    console.log('Server is running on http://localhost:3000');
+  console.log(`Server is running on port ${PORT}`);
 });
 
