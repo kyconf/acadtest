@@ -27,7 +27,7 @@ function LoginBox() {
     e.preventDefault(); // Prevent form from reloading the page
     console.log('Form submitted'); 
     try {
-      const response = await fetch('http://localhost:3000/login', { //3000 /login
+      const response = await fetch('/login', { //3000 /login
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

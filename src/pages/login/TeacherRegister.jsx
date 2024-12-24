@@ -35,7 +35,7 @@ function LoginPage() {
     e.preventDefault(); // Prevent form from reloading the page
 
     try {
-      const response = await fetch('http://localhost:3000/a-register', { //port 3000 /a-register
+      const response = await fetch('/a-register', { //port 3000 /a-register
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

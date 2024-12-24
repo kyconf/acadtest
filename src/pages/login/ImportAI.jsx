@@ -46,7 +46,7 @@ function ImportAI() {
         return;
       }
       try {
-        const response = await fetch('http://localhost:3000/openai', {
+        const response = await fetch('/openai', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ function ImportAI() {
     useEffect(() => {
         async function fetchExams() {
             try {
-                const response = await fetch('http://localhost:3000/openai/response'); // Fetch data from the backend 3000 login
+                const response = await fetch('/openai/response'); // Fetch data from the backend 3000 login
                 if (!response.ok) { 
                     throw new Error(`Error: ${response.statusText}`); // Handle HTTP errors
                 }
