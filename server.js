@@ -297,6 +297,14 @@ async function createExam(title, module, duration) { //get specific user by putt
 // Add this function to create the table
 async function initializeDatabase() {
     try {
+        console.log("Starting database initialization...");
+        
+        // Set a timeout for the database operations
+        const timeout = setTimeout(() => {
+            console.error("Database initialization timed out");
+            process.exit(1);
+        }, 25000); // 25 second timeout
+
         // Users table
         await db.query(`
             CREATE TABLE IF NOT EXISTS users (
@@ -307,8 +315,9 @@ async function initializeDatabase() {
                 created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
             )
         `);
+        console.log("Users table checked/created");
 
-        // Exams table
+        // Exams table - create this after users table is confirmed
         await db.query(`
             CREATE TABLE IF NOT EXISTS exams (
                 exam_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -320,8 +329,9 @@ async function initializeDatabase() {
                 FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE
             )
         `);
+        console.log("Exams table checked/created");
 
-        // Questions table
+        // Questions table - create this after exams table is confirmed
         await db.query(`
             CREATE TABLE IF NOT EXISTS questions (
                 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -339,28 +349,43 @@ async function initializeDatabase() {
                 FOREIGN KEY (exam_id) REFERENCES exams(exam_id) ON DELETE CASCADE
             )
         `);
+        console.log("Questions table checked/created");
 
-        console.log("Database initialized successfully");
+        // Clear the timeout since we're done
+        clearTimeout(timeout);
+        
+        console.log("Database initialization completed successfully");
     } catch (err) {
         console.error("Error initializing database:", err);
+        // Don't exit the process on error, just log it
+        return false;
     }
+    return true;
 }
 
-// Call this function before starting the server
-await initializeDatabase();
+// Modify how we call initializeDatabase
+const startServer = async () => {
+    try {
+        // Test database connection first
+        await testConnection();
+        
+        // Initialize database
+        const dbInitialized = await initializeDatabase();
+        if (!dbInitialized) {
+            console.warn("Database initialization had issues, but continuing startup...");
+        }
 
-(async () => {
-    // Test the connection
-    await testConnection();
-  const users = await getUserInfo();
-  const exams = await getExams();
-  
-})();
-  
+        // Start the server
+        const PORT = process.env.PORT || 3000;
+        app.listen(PORT, () => {
+            console.log(`Server is running on port ${PORT}`);
+        });
+    } catch (error) {
+        console.error("Failed to start server:", error);
+        process.exit(1);
+    }
+};
 
-
-const PORT = process.env.PORT || 3000;
-app.listen(3000, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+// Call the start function
+startServer();
 
