@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styles from './LoginBox.module.css'
 import student from '../assets/student.svg';
 import barcode from '../assets/barcode.png';
-import { API_URL } from '../../config/config';
+import { API_URL } from '../config/config';
 
 
 function LoginBox() {
