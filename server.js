@@ -543,21 +543,29 @@ async function initializeDatabase() {
   }
 }
 
+
 const startServer = async () => {
-  try {
-    // Test database connection first
-    await testConnection();
-    
-    // Initialize database
-    await initializeDatabase(); // No need to check its return value
-    
-    // Start the server
-    const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
-  } catch (error) {
-    console.error("Failed to start server:", error);
-    process.exit(1);
-  }
+    try {
+        // Test database connection first
+        await testConnection();
+        
+        // Initialize database
+        const dbInitialized = await initializeDatabase();
+        if (!dbInitialized) {
+            console.warn("Database initialization had issues, but continuing startup...");
+        }
+
+        // Start the server
+        const PORT = process.env.PORT || 3000;
+        app.listen(PORT, () => {
+            console.log(`Server is running on port ${PORT}`);
+        });
+    } catch (error) {
+        console.error("Failed to start server:", error);
+        process.exit(1);
+    }
 };
+
+// Call the start function
+startServer();
+
