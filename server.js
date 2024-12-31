@@ -403,7 +403,7 @@ async function createExam(title, module, duration) { //get specific user by putt
 //   console.log(`Server is running on port ${PORT}`);
 //   testConnection();
 // });
-
+//test
 
 async function initializeDatabase() {
   try {

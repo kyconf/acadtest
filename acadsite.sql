@@ -5,7 +5,7 @@ SELECT * from exams;
 SELECT * from sections;
 SELECT * from modules;
 SELECT * from questions;
-
+DESCRIBE users;
 
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
