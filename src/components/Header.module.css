@@ -7,6 +7,10 @@
   height: 64px;
   width: 100%;
   box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid rgb(226, 225, 225);
 }
 
 .profileSection {
@@ -19,6 +23,7 @@
 .profileText {
   font-size: 0.9rem;
   color: #333;
+  font-weight: 600;
 }
 
 .profileImage {
@@ -26,4 +31,5 @@
   height: 32px;
   border-radius: 50%;
   object-fit: cover;
+
 }

@@ -25,11 +25,11 @@ function CreatePage() {
     setContent(newContent);
   };
 
-  const [exams, setExams] = useState([]); // State to store the list of users
+  const [exams, setExams] = useState([]); // State to store the list of exams
   const [error, setError] = useState(null); // State to handle errors
 
   useEffect(() => {
-    async function fetchUsers() {
+    async function fetchExams() {
       try {
         const response = await fetch(`${API_URL}/exams`); // Fetch data from the backend 3000 login
         if (!response.ok) {
@@ -42,12 +42,15 @@ function CreatePage() {
       }
     }
 
-    fetchUsers();
+    fetchExams();
   }, []); // Empty dependency array to fetch data on component mount
 
   if (error) {
     return <p>Error fetching users: {error}</p>; // Display error if it occurs
   }
+
+
+
 
   // State for form data
     const [formData, setFormData] = useState({
@@ -140,6 +143,14 @@ function CreatePage() {
       }
     };
   
+    const handleEdit = (examId) => {
+      navigate(`/edit-exam/${examId}`);  // This will navigate to the editor page
+    };
+
+    const handlePreview = (examId) => {
+      navigate(`/preview-exam/${examId}`); // Navigate to the preview page
+
+    };
 
   return (
     <div className={styles.main}>
@@ -240,6 +251,12 @@ function CreatePage() {
                         onClick={() => handleDelete(exam.exam_id)}
                       >
                         Delete
+                      </button>
+                      <button 
+                        className={`${styles.actionBtn} ${styles.editBtn}`}
+                        onClick={() => handlePreview(exam.exam_id)}
+                      >
+                        Preview
                       </button>
                     </td>
                   </tr>

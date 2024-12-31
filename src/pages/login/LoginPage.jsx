@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../components/Sidebar';
 import styles from './LoginPage.module.css'
 import { API_URL } from '../../config/config';
-
+import Header from '../../components/Header';
 function LoginPage() {
   const navigate = useNavigate();
   
@@ -14,6 +14,8 @@ function LoginPage() {
   const [users, setUsers] = useState([]); 
   const [error, setError] = useState(null); 
   const [selectedUsers, setSelectedUsers] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [studentsPerPage] = useState(10);
 
   const handleSelectAll = (e) => {
     if (e.target.checked) {
@@ -65,6 +67,14 @@ function LoginPage() {
     fetchUsers();
   }, []);
 
+  // Get current students
+  const indexOfLastStudent = currentPage * studentsPerPage;
+  const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
+  const currentStudents = users.slice(indexOfFirstStudent, indexOfLastStudent);
+
+  // Calculate total pages
+  const totalPages = Math.ceil(users.length / studentsPerPage);
+
   if (error) {
     return <p>Error fetching users: {error}</p>;
   }
@@ -73,8 +83,12 @@ function LoginPage() {
     <div className={styles.main}>
       <div className={styles.sidebarContainer}>
         <Sidebar />
+       
       </div>
+      
       <div className={styles.contentArea}>
+        <Header />
+      
         <div className={styles.twrapper}>
           <table className={styles.examlist}>
             <thead>
@@ -87,6 +101,7 @@ function LoginPage() {
                     onChange={handleSelectAll}
                   />
                 </th>
+                <th>Name</th>
                 <th>Username</th>
                 <th>ID</th>
                 <th>Email</th>
@@ -96,7 +111,7 @@ function LoginPage() {
               </tr>
             </thead>
             <tbody>
-              {users.map((user) => (
+              {currentStudents.map((user) => (
                 <tr key={user.id} className={styles.examRow}>
                   <td>
                     <input
@@ -106,6 +121,7 @@ function LoginPage() {
                       onChange={() => handleSelectUser(user.id)}
                     />
                   </td>
+                  <td>{user.name}</td>
                   <td>{user.username}</td>
                   <td>{user.id}</td>
                   <td>{user.email || "No Email"}</td>
@@ -136,6 +152,35 @@ function LoginPage() {
             </tbody>
           </table>
           <button onClick={navButton}>Log Out</button>
+        </div>
+        <div className={styles.pagination}>
+          <button 
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className={styles.pageButton}
+          >
+            Previous
+          </button>
+          
+          {[...Array(totalPages)].map((_, index) => (
+            <button
+              key={index + 1}
+              onClick={() => setCurrentPage(index + 1)}
+              className={`${styles.pageButton} ${
+                currentPage === index + 1 ? styles.activePage : ''
+              }`}
+            >
+              {index + 1}
+            </button>
+          ))}
+
+          <button
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            className={styles.pageButton}
+          >
+            Next
+          </button>
         </div>
       </div>
     </div>

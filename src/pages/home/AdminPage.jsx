@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styles from './AdminPage.module.css'
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
+import Dashboard from '../../components/Dashboard';
 
 function AdminPage() {
   const navigate = useNavigate();
@@ -15,9 +16,7 @@ function AdminPage() {
       <div className={styles.contentArea}>
         <Header />
         <div className={styles.contentWrapper}>
-          <div className={styles.dashboard}>
-            <h2>Dashboard</h2>
-          </div>
+          <Dashboard />
           <div className={styles.wrapper2}>
             <div className={styles.card}>
               <div className={styles.content}>

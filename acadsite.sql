@@ -4,76 +4,161 @@ CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(255) UNIQUE NOT NULL,
   password VARCHAR(255) NOT NULL,
-  created TIMESTAMP NOT NULL DEFAULT NOW()
+  created TIMESTAMP NOT NULL DEFAULT NOW(),
+  name VARCHAR(255) NOT NULL
 );
-INSERT INTO users (username, password) 
-
-VALUES ('john_doe', 'password123');
-
-SELECT * FROM users; -- show info in tables
-ALTER TABLE users ADD created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
-DESCRIBE users; -- show tables
-INSERT INTO users (username, password) 
-VALUES ('kyle_fernandez', 'password');
-DELETE FROM users WHERE id = 2; 
-ALTER TABLE users AUTO_INCREMENT = 2;
-INSERT INTO users (username, password) 
-VALUES ('student1', 'huzzshhh');
-ALTER TABLE users
-ADD email VARCHAR(255); -- add column
-UPDATE users
-SET email = CONCAT(username, '@example.com')
-WHERE email IS NULL AND id > 0;
-ALTER TABLE users
-MODIFY email VARCHAR(255) UNIQUE NOT NULL;
 
 CREATE TABLE exams (
     exam_id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description TEXT,
-    created_by INT NOT NULL, -- Links to Users table
+    assigned_to INT NOT NULL, 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (created_by) REFERENCES Users(id) ON DELETE CASCADE
+    FOREIGN KEY (assigned_to) REFERENCES users(id) ON DELETE CASCADE
+);
+-- within each exam is a section and within each section is a module
+SELECT * FROM exams;
+
+UPDATE exams
+SET description = 'A practice exam.'
+WHERE exam_id = 1;
+
+SELECT 
+    exams.exam_id,
+    exams.title AS exam_title,
+    exams.description AS exam_description,
+    sections.section_id,
+    sections.number AS section_number,
+    modules.module_id,
+    modules.module_name AS module_name,
+    questions.id AS question_id,
+    questions.prompt AS question_prompt,
+    questions.number AS question_number,
+    questions.choice_A as question_choice_A,
+    questions.choice_B as question_choice_B,
+    questions.choice_C as question_choice_C,
+    questions.choice_D as question_choice_D,
+    questions.correct_answer AS correct_answer
+FROM 
+    exams
+INNER JOIN 
+    sections ON exams.exam_id = sections.exam_id
+INNER JOIN 
+    modules ON sections.section_id = modules.section_id
+INNER JOIN 
+    questions ON modules.module_id = questions.module
+WHERE 
+    exams.exam_id = 1 AND
+    sections.section_id = 1 AND
+    modules.module_id = 1;
+
+
+SELECT * from questions;
+
+CREATE TABLE sections (
+	section_id INT AUTO_INCREMENT PRIMARY KEY, 
+    exam_id INT NOT NULL,                     -- Foreign key linking to the exams table    
+    number INT NOT NULL,
+    FOREIGN KEY (exam_id) REFERENCES exams(exam_id) ON DELETE CASCADE 
+);
+ALTER TABLE modules
+ADD COLUMN number INT NOT NULL AFTER section_id;
+
+INSERT INTO sections (exam_id, number) VALUES
+('1', '1');
+
+SELECT * FROM sections;
+
+CREATE TABLE modules (
+	module_id INT AUTO_INCREMENT PRIMARY KEY, 
+    section_id INT NOT NULL,
+    number INT NOT NULL,
+    module_name VARCHAR(255) NOT NULL,      
+    FOREIGN KEY (section_id) REFERENCES sections(section_id) ON DELETE CASCADE 
 );
 
-DESCRIBE exams; -- show tables
-ALTER TABLE exams MODIFY COLUMN created_by INT NULL;
+SELECT * FROM modules;
 
-INSERT INTO exams (title) 
-VALUES ('practice1');
-
-INSERT INTO exams (title, description) 
-VALUES ('practice1', 'A placeholder assignment');
-
-
-SELECT * FROM exams; -- show info in tables
+INSERT INTO modules (section_id, number, module_name) VALUES
+('1','1','Reading and Writing');
 
 CREATE TABLE questions (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    exam_id INT NOT NULL, -- Links to exams.id
     section VARCHAR(255) NOT NULL,
-    module INT, -- reading&writing / math
+    module INT, 
     number INT,
     passage TEXT,
-    content TEXT,
+    prompt TEXT,
     choice_A TEXT,
     choice_B TEXT,
     choice_C TEXT,
     choice_D TEXT,
     correct_answer CHAR(1), -- Correct answer (e.g., A, B, C, D)
-    FOREIGN KEY (exam_id) REFERENCES exams(exam_id) ON DELETE CASCADE
+    FOREIGN KEY (module) REFERENCES modules(module_id) ON DELETE CASCADE
 );
+SHOW CREATE TABLE questions;
 
-INSERT INTO questions (exam_id, section, module, number, passage, content, choice_A, choice_B, choice_C, choice_D, correct_answer)
-VALUES 
-(1, 'Section 1', 1, 1, 'This is a sample passage.', 'What is the answer?', 'Option A', 'Option B', 'Option C', 'Option D', 'A');
+SET SQL_SAFE_UPDATES = 0;
+DELETE FROM users WHERE id=4;
+SET SQL_SAFE_UPDATES = 1;
+ALTER TABLE users AUTO_INCREMENT = 1;
+
+
+
+ALTER TABLE questions DROP FOREIGN KEY questions_ibfk_1;
+ALTER TABLE questions DROP COLUMN exam_id;
+ALTER TABLE questions
+ADD CONSTRAINT fk_module FOREIGN KEY (module) REFERENCES modules(module_id) ON DELETE CASCADE;
 
 DESCRIBE questions;
-SELECT * FROM questions; -- show info in tables
 
-ALTER TABLE exams
-RENAME COLUMN description to module;
+INSERT INTO users (username, password, email) VALUES
+('john_doe', 'password123', 'kyconf@gmail.com'),
+('jane_doe', 'password456', 'keycolinf@gmail.com'),
+('admin', 'adminpassword', 'kyconf@my.yorku.ca');
 
-DESCRIBE exams;
-ALTER TABLE exams
-ADD duration INT; -- add column	
+INSERT INTO users (username, password, email, name) VALUES
+('administrator', 'admin', 'kyconf@yorku.ca', 'Kyle Fernandez');
+
+
+SELECT * from users;
+SELECT * from exams;
+SELECT * from sections;
+SELECT * from modules;
+SELECT * from questions;
+INSERT INTO exams (title, description, assigned_to) VALUES
+('Math Exam', 'A basic mathematics exam covering algebra, geometry, and arithmetic.', 1),
+('Science Quiz', 'A short quiz testing knowledge of basic physics, chemistry, and biology.', 2),
+('History Test', 'A comprehensive test on world history, focusing on ancient civilizations.', 3);
+
+SET SQL_SAFE_UPDATES = 0;
+DELETE FROM exams;
+SET SQL_SAFE_UPDATES = 1;
+ALTER TABLE exams AUTO_INCREMENT = 1;
+
+ALTER TABLE questions
+CHANGE COLUMN content prompt TEXT;
+
+
+INSERT INTO questions (section, module, number, passage, prompt, choice_A, choice_B, choice_C, choice_D, correct_answer)
+VALUES
+(1, 1, 1, 
+ 'The sun provides energy essential for life on Earth. It is a vital component of photosynthesis, which allows plants to create oxygen and glucose.',
+ 'What is the primary role of the sun in the passage?', 
+ 'To provide light', 'To provide heat', 'To drive photosynthesis', 'To warm the Earth', 'C'),
+
+(1, 1, 2, 
+ 'In 1803, the Louisiana Purchase doubled the size of the United States, significantly expanding its territory and paving the way for westward expansion.',
+ 'What was a result of the Louisiana Purchase?', 
+ 'It decreased U.S. territory.', 'It doubled U.S. territory.', 'It made Louisiana an independent state.', 'It ended French control in North America.', 'B'),
+
+(1, 1, 3, 
+ 'The invention of the printing press in the 15th century revolutionized the spread of information, making books more accessible and promoting literacy.',
+ 'What was a key impact of the printing press described in the passage?', 
+ 'It made books expensive.', 'It promoted literacy.', 'It limited access to information.', 'It slowed the spread of ideas.', 'B');
+
+
+SELECT * from questions;
+
+
+

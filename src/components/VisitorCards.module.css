@@ -1,0 +1,53 @@
+.wrapper2 {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  
+  .card {
+    background: linear-gradient(180deg, #45badb, rgb(81, 141, 253));
+    border-radius: 8px;
+    padding: 20px;
+    width: 281px;
+    height: 140px;
+    transition: all 0.48s cubic-bezier(0.23, 1, 0.32, 1);
+    overflow: hidden;
+  }
+  
+  .content {
+    color: white;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .heading {
+    font-size: 12px;
+    font-weight: 600;
+    margin: 0;
+    text-align: center;
+  }
+  
+  .para {
+    line-height: 1.2;
+    font-size: 36px;
+    font-weight:700;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    margin: 0;
+    text-align: center;
+  }
+  
+  .card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 13px rgba(0,0,0,0.1),
+      0 24px 24px rgba(0,0,0,0.09),
+      0 55px 33px rgba(0,0,0,0.05),
+      0 97px 39px rgba(0,0,0,0.01);
+  }
+  

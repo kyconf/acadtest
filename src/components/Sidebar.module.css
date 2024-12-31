@@ -13,10 +13,9 @@
     display: flex;
     color: rgb(175, 171, 171); 
     gap: 10px;
-    border-color: rgb(184, 184, 184);
+    border-color: rgb(255, 255, 255);
     border-style: solid;
     border-width: 1px;
-  
     padding: 2rem;
     height: 100%;
   
@@ -33,14 +32,16 @@
   gap: 0.75rem;
   background-color: var(--clr);
   color: #000000;
-  border-radius: 1rem;
+  border-radius: 8px;
   font-weight: 600;
   padding: 0.75rem 1.5rem;
   padding-left: 20px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-size: 15px;
   transition: all 0.3s;
+  font-weight: 500;
 }
 
 .button__icon-wrapper {

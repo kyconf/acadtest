@@ -5,7 +5,7 @@ function Header() {
   return (
     <header className={styles.header}>
       <div className={styles.profileSection}>
-        <span className={styles.profileText}>John Doe</span>
+        <span className={styles.profileText}>Admin</span>
         <img 
           src={student}
           alt="Profile" 
