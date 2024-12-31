@@ -1,5 +1,12 @@
 CREATE DATABASE auth_db;
 USE auth_db;
+SELECT * from users;
+SELECT * from exams;
+SELECT * from sections;
+SELECT * from modules;
+SELECT * from questions;
+
+
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(255) UNIQUE NOT NULL,
@@ -19,9 +26,6 @@ CREATE TABLE exams (
 -- within each exam is a section and within each section is a module
 SELECT * FROM exams;
 
-UPDATE exams
-SET description = 'A practice exam.'
-WHERE exam_id = 1;
 
 SELECT 
     exams.exam_id,
@@ -53,7 +57,7 @@ WHERE
     modules.module_id = 1;
 
 
-SELECT * from questions;
+
 
 CREATE TABLE sections (
 	section_id INT AUTO_INCREMENT PRIMARY KEY, 
@@ -61,13 +65,11 @@ CREATE TABLE sections (
     number INT NOT NULL,
     FOREIGN KEY (exam_id) REFERENCES exams(exam_id) ON DELETE CASCADE 
 );
-ALTER TABLE modules
-ADD COLUMN number INT NOT NULL AFTER section_id;
 
 INSERT INTO sections (exam_id, number) VALUES
 ('1', '1');
 
-SELECT * FROM sections;
+
 
 CREATE TABLE modules (
 	module_id INT AUTO_INCREMENT PRIMARY KEY, 
@@ -77,7 +79,6 @@ CREATE TABLE modules (
     FOREIGN KEY (section_id) REFERENCES sections(section_id) ON DELETE CASCADE 
 );
 
-SELECT * FROM modules;
 
 INSERT INTO modules (section_id, number, module_name) VALUES
 ('1','1','Reading and Writing');
@@ -96,21 +97,6 @@ CREATE TABLE questions (
     correct_answer CHAR(1), -- Correct answer (e.g., A, B, C, D)
     FOREIGN KEY (module) REFERENCES modules(module_id) ON DELETE CASCADE
 );
-SHOW CREATE TABLE questions;
-
-SET SQL_SAFE_UPDATES = 0;
-DELETE FROM users WHERE id=4;
-SET SQL_SAFE_UPDATES = 1;
-ALTER TABLE users AUTO_INCREMENT = 1;
-
-
-
-ALTER TABLE questions DROP FOREIGN KEY questions_ibfk_1;
-ALTER TABLE questions DROP COLUMN exam_id;
-ALTER TABLE questions
-ADD CONSTRAINT fk_module FOREIGN KEY (module) REFERENCES modules(module_id) ON DELETE CASCADE;
-
-DESCRIBE questions;
 
 INSERT INTO users (username, password, email) VALUES
 ('john_doe', 'password123', 'kyconf@gmail.com'),
@@ -121,23 +107,12 @@ INSERT INTO users (username, password, email, name) VALUES
 ('administrator', 'admin', 'kyconf@yorku.ca', 'Kyle Fernandez');
 
 
-SELECT * from users;
-SELECT * from exams;
-SELECT * from sections;
-SELECT * from modules;
-SELECT * from questions;
 INSERT INTO exams (title, description, assigned_to) VALUES
 ('Math Exam', 'A basic mathematics exam covering algebra, geometry, and arithmetic.', 1),
 ('Science Quiz', 'A short quiz testing knowledge of basic physics, chemistry, and biology.', 2),
 ('History Test', 'A comprehensive test on world history, focusing on ancient civilizations.', 3);
 
-SET SQL_SAFE_UPDATES = 0;
-DELETE FROM exams;
-SET SQL_SAFE_UPDATES = 1;
-ALTER TABLE exams AUTO_INCREMENT = 1;
 
-ALTER TABLE questions
-CHANGE COLUMN content prompt TEXT;
 
 
 INSERT INTO questions (section, module, number, passage, prompt, choice_A, choice_B, choice_C, choice_D, correct_answer)
@@ -158,7 +133,6 @@ VALUES
  'It made books expensive.', 'It promoted literacy.', 'It limited access to information.', 'It slowed the spread of ideas.', 'B');
 
 
-SELECT * from questions;
-
+	
 
 

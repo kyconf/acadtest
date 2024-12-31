@@ -398,104 +398,166 @@ async function createExam(title, module, duration) { //get specific user by putt
 }
 
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-  testConnection();
-});
+// const PORT = process.env.PORT || 3000;
+// app.listen(PORT, () => {
+//   console.log(`Server is running on port ${PORT}`);
+//   testConnection();
+// });
 
-// // Add this function to create the table
-// async function initializeDatabase() {
-//     try {
-//         console.log("Starting database initialization...");
-        
-//         // Set a timeout for the database operations
-//         const timeout = setTimeout(() => {
-//             console.error("Database initialization timed out");
-//             process.exit(1);
-//         }, 25000); // 25 second timeout
 
-//         // Users table
-//         await db.query(`
-//             CREATE TABLE IF NOT EXISTS users (
-//                 id INT AUTO_INCREMENT PRIMARY KEY,
-//                 username VARCHAR(255) UNIQUE NOT NULL,
-//                 password VARCHAR(255) NOT NULL,
-//                 email VARCHAR(255) UNIQUE NOT NULL,
-//                 created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-//             )
-//         `);
-//         console.log("Users table checked/created");
+async function initializeDatabase() {
+  try {
+    console.log("Starting database initialization...");
 
-//         // Exams table - create this after users table is confirmed
-//         await db.query(`
-//             CREATE TABLE IF NOT EXISTS exams (
-//                 exam_id INT AUTO_INCREMENT PRIMARY KEY,
-//                 title VARCHAR(255) NOT NULL,
-//                 module TEXT,
-//                 created_by INT,
-//                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-//                 duration INT,
-//                 FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE
-//             )
-//         `);
-//         console.log("Exams table checked/created");
+    // Create the database if it doesn't exist
+    await db.query("CREATE DATABASE IF NOT EXISTS auth_db");
+    await db.query("USE auth_db");
 
-//         // Questions table - create this after exams table is confirmed
-//         await db.query(`
-//             CREATE TABLE IF NOT EXISTS questions (
-//                 id INT AUTO_INCREMENT PRIMARY KEY,
-//                 exam_id INT NOT NULL,
-//                 section VARCHAR(255) NOT NULL,
-//                 module INT,
-//                 number INT,
-//                 passage TEXT,
-//                 content TEXT,
-//                 choice_A TEXT,
-//                 choice_B TEXT,
-//                 choice_C TEXT,
-//                 choice_D TEXT,
-//                 correct_answer CHAR(1),
-//                 FOREIGN KEY (exam_id) REFERENCES exams(exam_id) ON DELETE CASCADE
-//             )
-//         `);
-//         console.log("Questions table checked/created");
+    // Create the `users` table
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(255) UNIQUE NOT NULL,
+        password VARCHAR(255) NOT NULL,
+        created TIMESTAMP NOT NULL DEFAULT NOW(),
+        name VARCHAR(255) NOT NULL
+      )
+    `);
+    console.log("Users table checked/created.");
 
-//         // Clear the timeout since we're done
-//         clearTimeout(timeout);
-        
-//         console.log("Database initialization completed successfully");
-//     } catch (err) {
-//         console.error("Error initializing database:", err);
-//         // Don't exit the process on error, just log it
-//         return false;
-//     }
-//     return true;
-// }
+    // Insert sample data into `users` table
+    await db.query(`
+      INSERT IGNORE INTO users (username, password, email, name)
+      VALUES
+      ('john_doe', 'password123', 'kyconf@gmail.com', 'John Doe'),
+      ('jane_doe', 'password456', 'keycolinf@gmail.com', 'Jane Doe'),
+      ('administrator', 'admin', 'kyconf@yorku.ca', 'Kyle Fernandez');
+    `);
+    console.log("Sample data inserted into users table.");
 
-// // Modify how we call initializeDatabase
-// const startServer = async () => {
-//     try {
-//         // Test database connection first
-//         await testConnection();
-        
-//         // Initialize database
-//         const dbInitialized = await initializeDatabase();
-//         if (!dbInitialized) {
-//             console.warn("Database initialization had issues, but continuing startup...");
-//         }
+    // Create the `exams` table
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS exams (
+        exam_id INT AUTO_INCREMENT PRIMARY KEY,
+        title VARCHAR(255) NOT NULL,
+        description TEXT,
+        assigned_to INT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (assigned_to) REFERENCES users(id) ON DELETE CASCADE
+      )
+    `);
+    console.log("Exams table checked/created.");
 
-//         // Start the server
-//         const PORT = process.env.PORT || 3000;
-//         app.listen(PORT, () => {
-//             console.log(`Server is running on port ${PORT}`);
-//         });
-//     } catch (error) {
-//         console.error("Failed to start server:", error);
-//         process.exit(1);
-//     }
-// };
+    // Insert sample data into `exams` table
+    await db.query(`
+      INSERT IGNORE INTO exams (title, description, assigned_to)
+      VALUES
+      ('Math Exam', 'A basic mathematics exam covering algebra, geometry, and arithmetic.', 1),
+      ('Science Quiz', 'A short quiz testing knowledge of basic physics, chemistry, and biology.', 2),
+      ('History Test', 'A comprehensive test on world history, focusing on ancient civilizations.', 3);
+    `);
+    console.log("Sample data inserted into exams table.");
 
-// // Call the start function
-// startServer();
+    // Create the `sections` table
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS sections (
+        section_id INT AUTO_INCREMENT PRIMARY KEY,
+        exam_id INT NOT NULL,
+        number INT NOT NULL,
+        FOREIGN KEY (exam_id) REFERENCES exams(exam_id) ON DELETE CASCADE
+      )
+    `);
+    console.log("Sections table checked/created.");
 
+    // Insert sample data into `sections` table
+    await db.query(`
+      INSERT IGNORE INTO sections (exam_id, number)
+      VALUES
+      (1, 1);
+    `);
+    console.log("Sample data inserted into sections table.");
+
+    // Create the `modules` table
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS modules (
+        module_id INT AUTO_INCREMENT PRIMARY KEY,
+        section_id INT NOT NULL,
+        number INT NOT NULL,
+        module_name VARCHAR(255) NOT NULL,
+        FOREIGN KEY (section_id) REFERENCES sections(section_id) ON DELETE CASCADE
+      )
+    `);
+    console.log("Modules table checked/created.");
+
+    // Insert sample data into `modules` table
+    await db.query(`
+      INSERT IGNORE INTO modules (section_id, number, module_name)
+      VALUES
+      (1, 1, 'Reading and Writing');
+    `);
+    console.log("Sample data inserted into modules table.");
+
+    // Create the `questions` table
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS questions (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        section VARCHAR(255) NOT NULL,
+        module INT,
+        number INT,
+        passage TEXT,
+        prompt TEXT,
+        choice_A TEXT,
+        choice_B TEXT,
+        choice_C TEXT,
+        choice_D TEXT,
+        correct_answer CHAR(1),
+        FOREIGN KEY (module) REFERENCES modules(module_id) ON DELETE CASCADE
+      )
+    `);
+    console.log("Questions table checked/created.");
+
+    // Insert sample data into `questions` table
+    await db.query(`
+      INSERT IGNORE INTO questions (section, module, number, passage, prompt, choice_A, choice_B, choice_C, choice_D, correct_answer)
+      VALUES
+      (1, 1, 1, 
+       'The sun provides energy essential for life on Earth. It is a vital component of photosynthesis, which allows plants to create oxygen and glucose.',
+       'What is the primary role of the sun in the passage?', 
+       'To provide light', 'To provide heat', 'To drive photosynthesis', 'To warm the Earth', 'C'),
+      (1, 1, 2, 
+       'In 1803, the Louisiana Purchase doubled the size of the United States, significantly expanding its territory and paving the way for westward expansion.',
+       'What was a result of the Louisiana Purchase?', 
+       'It decreased U.S. territory.', 'It doubled U.S. territory.', 'It made Louisiana an independent state.', 'It ended French control in North America.', 'B'),
+      (1, 1, 3, 
+       'The invention of the printing press in the 15th century revolutionized the spread of information, making books more accessible and promoting literacy.',
+       'What was a key impact of the printing press described in the passage?', 
+       'It made books expensive.', 'It promoted literacy.', 'It limited access to information.', 'It slowed the spread of ideas.', 'B');
+    `);
+    console.log("Sample data inserted into questions table.");
+
+    console.log("Database initialization completed successfully.");
+    return true;
+  } catch (err) {
+    console.error("Error initializing database:", err)
+    throw err
+  }
+}
+
+const startServer = async () => {
+  try {
+    // Test database connection first
+    await testConnection();
+    
+    // Initialize database
+    await initializeDatabase(); // No need to check its return value
+    
+    // Start the server
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error("Failed to start server:", error);
+    process.exit(1);
+  }
+};
