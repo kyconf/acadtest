@@ -409,9 +409,6 @@ async function initializeDatabase() {
   try {
     console.log("Starting database initialization...");
 
-    // Create the database if it doesn't exist
-    await db.query("CREATE DATABASE IF NOT EXISTS auth_db");
-    await db.query("USE auth_db");
 
     // Create the `users` table
     await db.query(`
