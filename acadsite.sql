@@ -26,7 +26,7 @@ CREATE TABLE exams (
 );
 -- within each exam is a section and within each section is a module
 SELECT * FROM exams;
-
+DESCRIBE exams;
 
 SELECT 
     exams.exam_id,
@@ -70,7 +70,7 @@ CREATE TABLE sections (
 INSERT INTO sections (exam_id, number) VALUES
 ('1', '1');
 
-
+DESCRIBE exams;
 
 CREATE TABLE modules (
 	module_id INT AUTO_INCREMENT PRIMARY KEY, 
