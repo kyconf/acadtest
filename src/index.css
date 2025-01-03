@@ -1,5 +1,20 @@
 /* This is the global css, whatever you edit here applies everywhere */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+/* Custom styles for shadcn/ui */
+@layer base {
+  :root {
+    --font-sans: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  body {
+    @apply bg-white text-black;
+    font-family: var(--font-sans);
+  }
+}
 
 
 
@@ -57,7 +72,7 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #f7f2f2;
   cursor: pointer;
   transition: border-color 0.25s;
 }

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 
-import LoginPage from "./pages/login/LoginPage.jsx";
+import StudentList from "./pages/login/StudentList.jsx";
 import TeacherLogin from "./pages/login/TeacherLogin.jsx";
 import TeacherRegister from "./pages/login/TeacherRegister.jsx";
 import ImportAI from "./pages/login/ImportAI.jsx";
@@ -30,7 +30,7 @@ function App() {
     {
       path: "/teacher",
       element:(
-      <LoginPage />
+      <StudentList />
 
 
       )

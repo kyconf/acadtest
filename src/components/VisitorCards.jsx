@@ -6,8 +6,8 @@ const VisitorCards = () => {
     <div className={styles.wrapper2}>
       <div className={styles.card}>
         <div className={styles.content}>
-          <p className={styles.heading}>Today's visitors</p>
-          <p className={styles.para}>1,173</p>
+          <p className={styles.heading}>Currently enrolled</p>
+          <p className={styles.para}>512</p>
           <p className={styles.heading}>(2023~2024)</p>
         </div>
       </div>
@@ -30,8 +30,8 @@ const VisitorCards = () => {
 
       <div className={styles.card}>
         <div className={styles.content}>
-          <p className={styles.heading}>Total visitors</p>
-          <p className={styles.para}>38,652</p>
+          <p className={styles.heading}>Total students</p>
+          <p className={styles.para}>1,213</p>
           <p className={styles.heading}>(2023~2024)</p>
         </div>
       </div>

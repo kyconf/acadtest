@@ -18,9 +18,10 @@
   top: 0;
   height: 100vh;
   background-color: white;
-  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+  border-right: 1px solid #e5e5e5;
   z-index: 100;
 }
+
 
 .contentArea {
   flex: 1;

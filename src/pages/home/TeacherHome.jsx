@@ -7,7 +7,9 @@ import VisitorCards from '../../components/VisitorCards';
 import { Chart } from 'chart.js/auto';
 import { Bar } from 'react-chartjs-2';
 
+
 function TeacherHome() {
+
   return (
     <div className={styles.main}>
       <div className={styles.sidebarContainer}>
@@ -19,7 +21,8 @@ function TeacherHome() {
         <div className={styles.contentWrapper}>
           <Dashboard />
           <VisitorCards />
-          
+        
+
           <div className={styles.graphcontainer}>
             <div className={styles.graph}>
               <h1> Recent Exams: Exam 1 </h1>
@@ -38,6 +41,8 @@ function TeacherHome() {
               />
               
             </div>
+      
+
           </div>
         </div>
       </div>

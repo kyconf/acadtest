@@ -20,10 +20,19 @@ CREATE TABLE exams (
     exam_id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description TEXT,
-    assigned_to INT NOT NULL, 
+    assigned_to INT, 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (assigned_to) REFERENCES users(id) ON DELETE CASCADE
 );
+
+
+SHOW CREATE TABLE exams;
+ALTER TABLE `exams` DROP FOREIGN KEY `fk_assigned_to`;
+ALTER TABLE `exams` MODIFY `assigned_to` INT DEFAULT NULL;
+ALTER TABLE `exams`
+ADD CONSTRAINT `fk_assigned_to`
+FOREIGN KEY (`assigned_to`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
 -- within each exam is a section and within each section is a module
 SELECT * FROM exams;
 DESCRIBE exams;
@@ -137,3 +146,5 @@ VALUES
 	
 
 DESCRIBE users;
+SELECT * from exams;
+DESCRIBE exams;

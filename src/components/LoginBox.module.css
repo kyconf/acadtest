@@ -30,7 +30,7 @@ h1 {
     border: none;
     padding: 10px;
     border-radius: 10px;
-    margin-top: 15px;
+    margin-top: 0px;
     box-shadow: #cff0ff 0px 10px 10px -5px;
     color: black;
     font-size: 12px;
@@ -40,7 +40,6 @@ h1 {
 .login { 
     margin-top: 15px;
     background: rgb(49, 123, 251);
-    
     border-radius: 10px;
     font-size: 12px;
     width: 100%;
@@ -69,18 +68,18 @@ h1 {
 
   .student {
     height: 5rem;
-    margin-left: 0px;
-    mix-blend-mode:multiply;
-
+    display: block;
+    margin: 0 auto;  /* Center horizontally */
+    margin-bottom: 20px;
+    mix-blend-mode: multiply;
   }
 
   .hole {
     border-style: solid;
     border-radius: 50px;
-    margin-top: -30px;
-    margin-bottom: 30px;
+    margin: -30px auto 30px;  /* Center horizontally and keep vertical spacing */
     width: 50px;
-    margin-left: 3.94rem; 
+    height: 6px;
     background-color: #e1e1e1;
     padding: 1px;
     border-color: #dadada;

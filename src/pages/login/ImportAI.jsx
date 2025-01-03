@@ -139,8 +139,8 @@ function ImportAI() {
                 <th>Exam ID</th>
                 <th>Name</th>
                 <th>Description</th>
-                <th>Created by</th>
                 <th>Created on</th>
+                <th>Duration</th>
 
               </tr>
             </thead>
@@ -148,8 +148,8 @@ function ImportAI() {
               <td>{selectedExam.exam_id}</td>
               <td>{selectedExam.title}</td>
               <td>{selectedExam.description}</td>
-              <td>{selectedExam.created_by}</td>
               <td>{selectedExam.created_at}</td>
+              <td>{selectedExam.duration}</td>
               
             </tbody>
           </table>

@@ -105,11 +105,11 @@ app.get('/exams', async (req, res) =>  { //gets the info
 });
 
 app.post('/exams', async (req, res) =>  {
-    const { title, module, duration } = req.body;
+    const { title, description, duration } = req.body;
 
     try {
-        console.log('Creating exam:', { title, module, duration });
-        const result = await createExam(title, module, duration);
+        console.log('Creating exam:', { title, description, duration });
+        const result = await createExam(title, description, duration);
         
         // Release connection explicitly if needed
         if (result.connection) result.connection.release();
@@ -119,7 +119,7 @@ app.post('/exams', async (req, res) =>  {
             result: {
                 exam_id: result.insertId,
                 title,
-                module,
+                description,
                 duration
             }
         });
@@ -333,6 +333,7 @@ db.on('error', function(err) {
               modules.module_id,
               modules.module_name AS module_name,
               questions.id AS question_id,
+              questions.passage AS question_passage,
               questions.prompt AS question_prompt,
               questions.number AS question_number,
               questions.choice_A as question_choice_A,
@@ -389,7 +390,7 @@ async function regist(username, password, email) { //get specific user by puttin
     return result;
 }
 
-async function createExam(title, module, duration) { //get specific user by putting a parameter
+async function createExam(title, description, duration) { //get specific user by putting a parameter
   const result = await db.query(`
       INSERT INTO exams (title, description, duration)
       VALUES (?, ?, ?)

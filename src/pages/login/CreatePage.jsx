@@ -8,6 +8,20 @@ import 'katex/dist/katex.min.css'; // Import KaTeX styles for math rendering
 import katex from 'katex'; // Import KaTeX
 import Sidebar from '../../components/Sidebar';
 import styles from './CreatePage.module.css';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../../components/ui/alert-dialog";
+import Create from '../../components/Create';
+import Header from '../../components/Header';
+
 
 function CreatePage() {
   const navigate = useNavigate();
@@ -27,6 +41,16 @@ function CreatePage() {
 
   const [exams, setExams] = useState([]); // State to store the list of exams
   const [error, setError] = useState(null); // State to handle errors
+  const [currentPage, setCurrentPage] = useState(1);
+  const examsPerPage = 10; // You can adjust this number
+
+  // Get current exams
+  const indexOfLastExam = currentPage * examsPerPage;
+  const indexOfFirstExam = indexOfLastExam - examsPerPage;
+  const currentExams = exams.slice(indexOfFirstExam, indexOfLastExam);
+
+  // Calculate total pages
+  const totalPages = Math.ceil(exams.length / examsPerPage);
 
   useEffect(() => {
     async function fetchExams() {
@@ -55,7 +79,7 @@ function CreatePage() {
   // State for form data
     const [formData, setFormData] = useState({
       title: '',
-      module: '',
+      description: '',
       duration:0
     });
   
@@ -114,7 +138,7 @@ function CreatePage() {
           // Clear form
           setFormData({
             title: '',
-            module: '',
+            description: '',
             duration: 0
           });
   
@@ -152,124 +176,178 @@ function CreatePage() {
 
     };
 
+    const handleDelete = (examId) => {
+
+    };
+
   return (
     <div className={styles.main}>
       <div className={styles.sidebarContainer}>
         <Sidebar />
       </div>
       <div className={styles.contentArea}>
-        {/* Add alert display */}
-        {alert.show && (
-          <div className={`${styles.alert} ${styles[alert.type]}`}>
-            {alert.message}
-          </div>
-        )}
-        <div className={styles.container}>
-          <form onSubmit={handleSubmit}>
-            <div>
-              <label htmlFor="title">Exam Title</label>
-              <input
-                type="text"
-                id="title"
-                name="title"
-                value={formData.title}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div>
-              <label htmlFor="module">Module</label>
-              <select
-                id="module"
-                name="module"
-                value={formData.module}
-                onChange={handleChange}
-                required
-              >
-                <option value="" disabled>Select a Module</option> {/* Placeholder option */}
-                <option value="Reading and Writing">Reading & Writing</option>
-                <option value="Math">Math</option>
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="duration">Duration</label>
-              <input
-                type="text"
-                id="duration"
-                name="duration"
-                value={formData.duration}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <button type="submit">Create Exam</button>
-          </form>
+        <div className={styles.headerWrapper}>
+          <Header />
         </div>
-        <div className={styles.twrapper}>
-          <table className={styles.examlist}>
-            <thead>
-              <tr className={styles.header}>
-                <th></th>
-                <th>Exam ID</th>
-                <th>Title</th>
-                <th>Module</th>
-                <th>Created</th>
-                <th>Duration</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {exams.length > 0 ? (
-                exams.map((exam) => (
-                  <tr key={exam.exam_id} className={styles.examRow}>
-                    <td>
-                      <input type="checkbox" className={styles.uicheckbox} />
-                    </td>
-                    <td>{exam.exam_id}</td>
-                    <td>{exam.title}</td>
-                    <td>{exam.module}</td>
-                    <td>{exam.created_at}</td>
-                    <td>{exam.duration}</td>
-                    <td className={styles.actionButtons}>
-                      <button 
-                        className={`${styles.actionBtn} ${styles.editBtn}`}
-                        onClick={() => handleEdit(exam.exam_id)}
-                      >
-                        Edit
-                      </button>
-                      <button 
-                        className={`${styles.actionBtn} ${styles.assignBtn}`}
-                        onClick={() => handleAssign(exam.exam_id)}
-                      >
-                        Assign
-                      </button>
-                      <button 
-                        className={`${styles.actionBtn} ${styles.deleteBtn}`}
-                        onClick={() => handleDelete(exam.exam_id)}
-                      >
-                        Delete
-                      </button>
-                      <button 
-                        className={`${styles.actionBtn} ${styles.editBtn}`}
-                        onClick={() => handlePreview(exam.exam_id)}
-                      >
-                        Preview
-                      </button>
+        <div className={styles.pageContent}>
+          <Create />
+          {alert.show && (
+            <div className={`${styles.alert} ${styles[alert.type]}`}>
+              {alert.message}
+            </div>
+          )}
+          <div className={styles.container}>
+            <form onSubmit={handleSubmit}>
+              <div>
+                <label htmlFor="title">Exam Title</label>
+                <input
+                  type="text"
+                  id="title"
+                  name="title"
+                  value={formData.title}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div>
+                <label htmlFor="description">Module</label>
+                <select
+                  id="description"  
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="" disabled>Select a Module</option> {/* Placeholder option */}
+                  <option value="Reading and Writing">Reading & Writing</option>
+                  <option value="Math">Math</option>
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="duration">Duration</label>
+                <input
+                  type="text"
+                  id="duration"
+                  name="duration"
+                  value={formData.duration}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <button type="submit">Create Exam</button>
+            </form>
+          </div>
+          <div className={styles.twrapper}>
+            <table className={styles.examlist}>
+              <thead>
+                <tr className={styles.header}>
+                  <th></th>
+                  <th>Exam ID</th>
+                  <th>Title</th>
+                 
+                  <th>Created</th>
+                  <th>Duration</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentExams.length > 0 ? (
+                  currentExams.map((exam) => (
+                    <tr key={exam.exam_id} className={styles.examRow}>
+                      <td>
+                        <input type="checkbox" className={styles.uicheckbox} />
+                      </td>
+                      <td>{exam.exam_id}</td>
+                      <td>{exam.title}</td>
+                   
+                      <td>{exam.created_at}</td>
+                      <td>{exam.duration}</td>
+                      <td className={styles.actionButtons}>
+                        <button 
+                          className={`${styles.actionBtn} ${styles.editBtn}`}
+                          onClick={() => handleEdit(exam.exam_id)}
+                        >
+                          Edit
+                        </button>
+                        <button 
+                          className={`${styles.actionBtn} ${styles.assignBtn}`}
+                          onClick={() => handleAssign(exam.exam_id)}
+                        >
+                          Assign
+                        </button>
+
+                      <div className={styles.deleteBtn}>
+                        <AlertDialog>
+                          <AlertDialogTrigger className={`${styles.actionBtn} ${styles.deleteBtn}`}>
+                            Delete
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This action cannot be undone. This will permanently delete your account
+                                and remove your data from our servers.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction>Continue</AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </div>
+
+                        <button 
+                          className={`${styles.actionBtn} ${styles.editBtn}`}
+                          onClick={() => handlePreview(exam.exam_id)}
+                        >
+                          Preview
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="6" style={{ textAlign: 'center', padding: '24px' }}>
+                      No exams found
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="6" style={{ textAlign: 'center', padding: '24px' }}>
-                    No exams found
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                )}
+              </tbody>
+            </table>
+            <div className={styles.pagination}>
+              <button 
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className={styles.pageButton}
+              >
+                Previous
+              </button>
+              
+              {[...Array(totalPages)].map((_, index) => (
+                <button
+                  key={index + 1}
+                  onClick={() => setCurrentPage(index + 1)}
+                  className={`${styles.pageButton} ${
+                    currentPage === index + 1 ? styles.activePage : ''
+                  }`}
+                >
+                  {index + 1}
+                </button>
+              ))}
+
+              <button
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className={styles.pageButton}
+              >
+                Next
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

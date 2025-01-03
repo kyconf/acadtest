@@ -5,7 +5,7 @@
   }
   
   .card {
-    background: linear-gradient(180deg, #45badb, rgb(81, 141, 253));
+    background: linear-gradient(180deg, #45aedb, rgb(81, 141, 253));
     border-radius: 8px;
     padding: 20px;
     width: 281px;
@@ -50,4 +50,6 @@
       0 55px 33px rgba(0,0,0,0.05),
       0 97px 39px rgba(0,0,0,0.01);
   }
+  
+
   

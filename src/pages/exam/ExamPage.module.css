@@ -147,7 +147,7 @@
   text-align: left;
   cursor: pointer;
   transition: all 0.2s;
-  color:black;
+  color: black;
 }
 
 .optionButton:hover {
@@ -161,7 +161,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #ccc;
+  border: 1px solid #0f0f0f;
   border-radius: 50%;
 }
 
@@ -192,4 +192,15 @@
 .navButton:disabled {
   background: #ccc;
   cursor: not-allowed;
+}
+
+.selected {
+  background-color: #e6f0ff;
+  border-color: #0066cc;
+  color: #0066cc;
+}
+
+.selected .optionLetter {
+  
+  border-color: #0066cc;
 } 

@@ -8,6 +8,7 @@ function ExamPage() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [isMarkedForReview, setIsMarkedForReview] = useState(false);
   const [preview, setPreview] = useState(null); // Initialize preview state
+  const [selectedOptions, setSelectedOptions] = useState({}); // Object to store selections for each question
 
   const fetchPreview = async () => {
     try {
@@ -30,25 +31,33 @@ function ExamPage() {
   }, [examId]);
 
   // Check if preview data is available
-  if (!preview) {
+  if (!preview || preview.length === 0) {
     return <p>Loading...</p>; // Show loading state while fetching
   }
 
-  const { title, question_prompt, question_number } = preview; // Destructure the preview data
 
   const handleNext = () => {
-    if (currentQuestion < question_number) {
-      setCurrentQuestion(currentQuestion + 1);
+    if (currentQuestion < preview.length - 1) {
+      setCurrentQuestion((prev) => prev + 1);
+      console.log("Success");
     }
   };
 
   const handlePrevious = () => {
     if (currentQuestion > 0) {
-      setCurrentQuestion(currentQuestion - 1);
+      setCurrentQuestion((prev) => prev - 1);
+      
     }
   };
 
   const currentQ = preview[currentQuestion];
+
+  const handleOptionSelect = (option) => {
+    setSelectedOptions(prev => ({
+      ...prev,
+      [currentQuestion]: option // Store selection for current question
+    }));
+  };
 
   return (
     <div className={styles.examContainer}>
@@ -74,7 +83,7 @@ function ExamPage() {
       {/* Main Content */}
       <div className={styles.examContent}>
         <div className={styles.questionText}>
-          <p>{currentQ[`question_prompt`]}</p>
+          <p>{currentQ[`question_passage`]}</p>
         </div>
         
         <div className={styles.questionArea}>
@@ -88,11 +97,15 @@ function ExamPage() {
             </button>
           </div>
           
-          <p className={styles.questionPrompt}>{currentQ.prompt}</p>
+          <p className={styles.questionPrompt}>{currentQ[`question_prompt`]}</p>
 
           <div className={styles.options}>
             {["A","B","C","D"].map((option) => (
-              <button key={option.id} className={styles.optionButton}>
+              <button 
+                key={option}
+                className={`${styles.optionButton} ${selectedOptions[currentQuestion] === option ? styles.selected : ''}`}
+                onClick={() => handleOptionSelect(option)}
+              >
                 <span className={styles.optionLetter}>{option}</span>
                 {currentQ[`question_choice_${option}`]}
               </button>
@@ -112,11 +125,11 @@ function ExamPage() {
           >
             Previous
           </button>
-          Question {currentQ[`question_number`]} of 2
+          Question {currentQ[`question_number`]} of 3
           <button 
             className={styles.navButton} 
             onClick={handleNext}
-            disabled={currentQuestion === question_number - 1}
+            disabled={currentQuestion === preview.length - 1}
           >
             Next
           </button>
