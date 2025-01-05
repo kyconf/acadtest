@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import styles from './ExamPage.module.css';
 import { API_URL } from '../../config/config';
 
+
 function ExamPage() {
   const { examId } = useParams(); // Extract the examId from the URL
   const [currentQuestion, setCurrentQuestion] = useState(0);

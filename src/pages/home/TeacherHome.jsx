@@ -6,7 +6,14 @@ import Dashboard from '../../components/Dashboard';
 import VisitorCards from '../../components/VisitorCards';
 import { Chart } from 'chart.js/auto';
 import { Bar } from 'react-chartjs-2';
-
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
 
 function TeacherHome() {
 
@@ -16,9 +23,25 @@ function TeacherHome() {
         <Sidebar />
       </div>
       <div className={styles.contentArea}>
-        <Header />
+      <div className={styles.headerWrapper}>
+          <Header />
+        </div>
         
         <div className={styles.contentWrapper}>
+
+        <div className={styles.breadcrumbContainer}>
+        <Breadcrumb>
+  <BreadcrumbList>
+    <BreadcrumbItem>
+      <BreadcrumbLink href="/">Home</BreadcrumbLink>
+    </BreadcrumbItem>
+    <BreadcrumbSeparator />
+    <BreadcrumbItem>
+      <BreadcrumbPage>Dashboard</BreadcrumbPage>
+    </BreadcrumbItem>
+  </BreadcrumbList>
+</Breadcrumb>
+</div>
           <Dashboard />
           <VisitorCards />
         

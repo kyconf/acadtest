@@ -4,6 +4,7 @@ import Sidebar from '../../components/Sidebar';
 import styles from './StudentList.module.css'
 import { API_URL } from '../../config/config';
 import Header from '../../components/Header';
+import Students from '../../components/Students';
 function StudentList() {
   const navigate = useNavigate();
   
@@ -87,8 +88,11 @@ function StudentList() {
       <div className={styles.contentArea}>
         <div className={styles.headerWrapper}>
           <Header />
+          
         </div>
+        
         <div className={styles.pageContent}>
+        <Students />
           <div className={styles.twrapper}>
             <table className={styles.examlist}>
               <thead>

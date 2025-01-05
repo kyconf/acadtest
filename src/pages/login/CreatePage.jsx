@@ -2,10 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { API_URL } from '../../config/config';
 
-import SunEditor from 'suneditor-react';
-import 'suneditor/dist/css/suneditor.min.css'; // Import SunEditor styles
-import 'katex/dist/katex.min.css'; // Import KaTeX styles for math rendering
-import katex from 'katex'; // Import KaTeX
 import Sidebar from '../../components/Sidebar';
 import styles from './CreatePage.module.css';
 import {
@@ -31,13 +27,7 @@ function CreatePage() {
     navigate('/teacher'); // Replace with your desired route
   };
 
-  // State for SunEditor content
-  const [content, setContent] = useState('');
 
-  const handChange = (newContent) => {
-    console.log('Editor Content:', newContent);
-    setContent(newContent);
-  };
 
   const [exams, setExams] = useState([]); // State to store the list of exams
   const [error, setError] = useState(null); // State to handle errors
@@ -198,44 +188,52 @@ function CreatePage() {
           )}
           <div className={styles.container}>
             <form onSubmit={handleSubmit}>
-              <div>
-                <label htmlFor="title">Exam Title</label>
+              <div className={styles.formGroup}>
+                <label>Title:</label>
                 <input
                   type="text"
-                  id="title"
-                  name="title"
                   value={formData.title}
-                  onChange={handleChange}
-                  required
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  className={styles.textInput}
+                  placeholder="Enter exam title"
                 />
               </div>
 
-              <div>
-                <label htmlFor="description">Module</label>
+              <div className={styles.formGroup}>
+                <label>Module:</label>
                 <select
-                  id="description"  
-                  name="description"
                   value={formData.description}
-                  onChange={handleChange}
-                  required
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  className={styles.selectInput}
                 >
-                  <option value="" disabled>Select a Module</option> {/* Placeholder option */}
+                  <option value="" disabled>Select a Module</option>
                   <option value="Reading and Writing">Reading & Writing</option>
                   <option value="Math">Math</option>
                 </select>
               </div>
 
-              <div>
-                <label htmlFor="duration">Duration</label>
+              <div className={styles.formGroup}>
+                <label>Duration:</label>
                 <input
                   type="text"
-                  id="duration"
-                  name="duration"
                   value={formData.duration}
-                  onChange={handleChange}
-                  required
+                  onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+                  className={styles.textInput}
+                  placeholder="Enter duration"
                 />
               </div>
+
+                <label>Section:</label>
+                <select
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  className={styles.selectInput}
+                >
+                  <option value="" disabled>Select a Module</option>
+                  <option value="Reading and Writing">Reading & Writing</option>
+                  <option value="Math">Math</option>
+                </select>
+              
 
               <button type="submit">Create Exam</button>
             </form>
@@ -247,7 +245,6 @@ function CreatePage() {
                   <th></th>
                   <th>Exam ID</th>
                   <th>Title</th>
-                 
                   <th>Created</th>
                   <th>Duration</th>
                   <th>Actions</th>
@@ -288,8 +285,8 @@ function CreatePage() {
                             <AlertDialogHeader>
                               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                               <AlertDialogDescription>
-                                This action cannot be undone. This will permanently delete your account
-                                and remove your data from our servers.
+                                This action cannot be undone. This will permanently delete your exam
+                                and remove its data from our servers.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>

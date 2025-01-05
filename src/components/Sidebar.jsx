@@ -32,7 +32,7 @@ function LoginBox() {
  preserveAspectRatio="xMidYMid meet">
 
 <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
-fill="black" stroke="none">
+fill="black" stroke="#000000" stroke-width="-10000">
 <path d="M2310 4583 c-685 -70 -1307 -405 -1739 -937 -160 -196 -328 -492
 -416 -730 -70 -189 -124 -438 -145 -661 -34 -372 26 -788 166 -1143 76 -191
 214 -450 278 -520 35 -39 90 -62 148 -62 48 0 78 12 277 109 124 60 240 121
@@ -201,8 +201,8 @@ fill="#000000" stroke="none">
         Profile
       </button>
       <button className={`${styles.button} ${
-          location.pathname === '/admin' ? styles.clicked : ''
-        }`} onClick={() => navButton('/admin')}><svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+          location.pathname === '/announcements' ? styles.clicked : ''
+        }`} onClick={() => navButton('/announcements')}><svg version="1.0" xmlns="http://www.w3.org/2000/svg"
  width="1.5rem" height="1.5rem" viewBox="0 0 512.000000 512.000000"
  preserveAspectRatio="xMidYMid meet">
 

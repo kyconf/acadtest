@@ -11,7 +11,8 @@ import AdminPage from './pages/home/AdminPage.jsx';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ExamPage from './pages/exam/ExamPage.jsx';
 import ExamEditor from './pages/exam/ExamEditor';
-
+import AnnouncePage from './pages/login/AnnouncePage.jsx';
+import ExamEdit from './pages/exam/ExamEdit.jsx';
 // This is the first page, aka the login page
 // to run app do npm run dev
 
@@ -81,6 +82,10 @@ function App() {
     {
       path: "/edit-exam/:examId",
       element: <ExamEditor />
+    },
+    {
+      path: "/announcements",
+      element: <AnnouncePage />
     }
   ]);
 

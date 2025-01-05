@@ -6,13 +6,12 @@
 }
 
 .main {
-  width: 100vw; /* Use viewport width instead of percentage */
+  width: 100vw;
   min-height: 100vh;
   display: flex;
   overflow: hidden;
-  margin: 0; /* Explicitly remove any margin */
-  padding: 0; /* Explicitly remove any padding */
-  
+  margin: 0;
+  padding: 0;
 }
 
 .sidebarContainer {
@@ -26,12 +25,17 @@
 
 .contentArea {
   flex: 1;
-  overflow-y: auto;
   height: 100vh;
+  display: flex;
+  flex-direction: column;
   background-color: #fefdfd;
+  overflow: hidden;
+
 }
 
 .contentWrapper {
+  flex: 1;
+  overflow-y: auto;
   padding: 20px;
 }
 
@@ -47,7 +51,7 @@ fill: rgb(208, 217, 241)
   
 }
 .graphcontainer {
-  margin-top: 2rem; /* Space above the graph */
+  margin-top: 2rem;
   margin-bottom: 4rem;
 }
 
@@ -58,13 +62,16 @@ fill: rgb(208, 217, 241)
 }
 
 .graph {
-  height: 600px; /* Set a fixed height for the chart */
-  width: 100%; /* Ensure it takes full width */
-  
+  height: 600px;
+  width: 100%;
 }
 
 .graph h1 {
   text-align: center;
+  margin-bottom: 1rem;
+}
+
+.breadcrumbContainer {
   margin-bottom: 1rem;
 }
 

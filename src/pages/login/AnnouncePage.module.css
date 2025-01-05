@@ -1,0 +1,71 @@
+/* Reset default margins and padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  .main {
+    width: 100vw; /* Use viewport width instead of percentage */
+    min-height: 100vh;
+    display: flex;
+    overflow: hidden;
+    margin: 0; /* Explicitly remove any margin */
+    padding: 0; /* Explicitly remove any padding */
+    
+  }
+  
+  .sidebarContainer {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    background-color: white;
+    border-right: 1px solid #e5e5e5;
+    z-index: 100;
+  }
+  
+  .contentArea {
+    flex: 1;
+    overflow-y: auto;
+    height: 100vh;
+    background-color: #fefdfd;
+  }
+  
+  .contentWrapper {
+    padding: 20px;
+  }
+  
+  /* Remove any padding/margin from the Header component's container */
+  .contentArea > :first-child {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+  
+  .dashboardIcon svg {
+  fill: rgb(208, 217, 241)
+    
+  }
+  .graphcontainer {
+    margin-top: 2rem; /* Space above the graph */
+    margin-bottom: 4rem;
+  }
+  
+  .graphcontainer h1 {
+    text-align: left;
+    margin-left: 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .graph {
+    height: 600px; /* Set a fixed height for the chart */
+    width: 100%; /* Ensure it takes full width */
+    
+  }
+  
+  .graph h1 {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  
+  

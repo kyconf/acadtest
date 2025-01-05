@@ -9,7 +9,7 @@
   box-sizing: border-box;
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 40;
   border-bottom: 1px solid rgb(226, 225, 225);
 }
 
@@ -17,7 +17,6 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-right: 1rem;
 }
 
 .profileText {
@@ -31,5 +30,5 @@
   height: 32px;
   border-radius: 50%;
   object-fit: cover;
-
+  cursor: pointer;
 }

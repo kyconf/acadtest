@@ -89,6 +89,8 @@ CREATE TABLE modules (
     FOREIGN KEY (section_id) REFERENCES sections(section_id) ON DELETE CASCADE 
 );
 
+DESCRIBE modules;
+
 
 INSERT INTO modules (section_id, number, module_name) VALUES
 ('1','1','Reading and Writing');

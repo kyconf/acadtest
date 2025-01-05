@@ -5,14 +5,11 @@
 
 /* Custom styles for shadcn/ui */
 @layer base {
-  :root {
-    --font-sans: 'Inter', sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
-  }
+
 
   body {
     @apply bg-white text-black;
-    font-family: var(--font-sans);
+   
   }
 }
 
@@ -23,7 +20,7 @@ html, body, #root {
   margin: 0; /* Remove default margins */
   width: 100%;
   display:flex;
- 
+  overflow-x: hidden;
 }
 
 :root {
@@ -58,6 +55,9 @@ body {
   justify-content: center;
   min-width: 320px;
   min-height: 100vh;
+  overflow-x: hidden;
+  width: 100%;
+  padding: 0;
 }
 
 h1 {
