@@ -208,15 +208,19 @@
   }
   
   .selected {
-    background-color: #e6f0ff;
-    border-color: #0066cc;
-    color: #0066cc;
+    background-color: #e6ffeb;
+    border-color: #00cc2c;
+    color: #010203;
   }
   
   .selected .optionLetter {
     
-    border-color: #0066cc;
+    border-color: #000000;
   } 
+
+  .options button:hover {
+    border-color:#000000;
+  }
 
   .selectInput {
 
@@ -227,4 +231,8 @@
     background-color: white;
     font-size: 14px;
     
+  }
+
+  form {
+    display: contents; /* Makes the form element "invisible" to flexbox */
   }

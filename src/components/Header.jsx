@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './Header.module.css';
 import student from '../assets/student.svg';
+import { useNavigate } from 'react-router-dom';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,6 +18,12 @@ import {
 } from "./ui/dropdown-menu"
 
 function Header() {
+  const navigate = useNavigate();
+  const navButton = (path) => {
+    navigate(path); // Replace '/start-learning' with your desired route
+
+};
+
   return (
     <header className={styles.header}>
       <div className={styles.profileSection}>
@@ -76,7 +83,7 @@ function Header() {
         <DropdownMenuItem>Support</DropdownMenuItem>
         <DropdownMenuItem disabled>API</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem className={styles.dropdownLogOut} onClick={() => navButton('/')}>
           Log out
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>

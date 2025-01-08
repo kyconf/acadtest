@@ -55,7 +55,7 @@
 .timer {
   font-size: 1.2rem;
   font-weight: bold;
-
+  margin-right: 25vw;
 }
 
 .toolButton {
@@ -215,3 +215,7 @@
   
   border-color: #0066cc;
 } 
+
+.choice {
+  font-weight: 400;
+}

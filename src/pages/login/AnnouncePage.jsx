@@ -19,8 +19,8 @@ function AnnouncePage() {
         
         <div className={styles.contentWrapper}>
           <Announce />
-          <VisitorCards />
-        
+     
+          
 
 
         </div>

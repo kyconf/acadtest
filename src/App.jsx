@@ -13,6 +13,7 @@ import ExamPage from './pages/exam/ExamPage.jsx';
 import ExamEditor from './pages/exam/ExamEditor';
 import AnnouncePage from './pages/login/AnnouncePage.jsx';
 import ExamEdit from './pages/exam/ExamEdit.jsx';
+import Timer from './pages/exam/Timer.jsx';
 // This is the first page, aka the login page
 // to run app do npm run dev
 
@@ -86,6 +87,10 @@ function App() {
     {
       path: "/announcements",
       element: <AnnouncePage />
+    },
+    {
+      path: "/timer",
+      element: <Timer />
     }
   ]);
 

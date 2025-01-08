@@ -104,7 +104,7 @@ app.get('/exams', async (req, res) =>  { //gets the info
   }
 });
 
-app.post('/exams', async (req, res) =>  {
+app.post('/exams', async (req, res) =>  { //initially for creating exams but not updating
     const { title, description, duration } = req.body;
 
     try {
@@ -181,6 +181,20 @@ app.post('/a-register', async (req, res) =>  {
         res.status(500).json({ message: 'Error registering user: An account already exists with those credentials', error });
     }
     
+});
+
+
+app.put('/preview-exams/:examId', async (req, res) =>  {
+  const { section, module, number, prompt, passage, choice_A, choice_B, choice_C, choice_D, correct_answer } = req.body;
+  const { examId } = req.params;
+  try {
+      const result = await updateExam(examId, section, module, number, prompt, passage, choice_A, choice_B, choice_C, choice_D, correct_answer);
+      res.status(201).json({ message: 'Exam updated successfully', result });
+  } catch (error) {
+      console.error('Error registering user:', error);
+      res.status(500).json({ message: 'Error registering user: An account already exists with those credentials', error });
+  }
+  
 });
 
 
@@ -331,6 +345,7 @@ db.on('error', function(err) {
               sections.section_id,
               sections.number AS section_number,
               modules.module_id,
+              modules.number AS module_number,
               modules.module_name AS module_name,
               questions.id AS question_id,
               questions.passage AS question_passage,
@@ -389,6 +404,131 @@ async function regist(username, password, email) { //get specific user by puttin
          `, [username, password, email]); // make sure its the same name in mysql
     return result;
 }
+
+async function updateExam(
+  examId,
+  sectionId,
+  moduleId,
+  number,
+  prompt,
+  passage,
+  choice_A,
+  choice_B,
+  choice_C,
+  choice_D,
+  correct_answer
+) {
+
+  console.log("Received parameters:", {
+    examId,
+    sectionId,
+    moduleId,
+    number,
+    prompt,
+    passage,
+    choice_A,
+    choice_B,
+    choice_C,
+    choice_D,
+    correct_answer,
+  });
+  let connection;
+  try {
+    // Get a connection from the pool
+    connection = await db.getConnection();
+    
+    // Start a transaction
+    await connection.beginTransaction();
+
+    // Ensure the exam exists
+    await connection.execute(
+      `
+      INSERT INTO exams (exam_id, title, description)
+      VALUES (?, ?, ?)
+      ON DUPLICATE KEY UPDATE
+        title = VALUES(title),
+        description = VALUES(description);
+      `,
+      [examId, `Exam ${examId}`, `Description for Exam ${examId}`]
+    );
+
+    // Ensure the section exists
+    await connection.execute(
+      `
+      INSERT INTO sections (section_id, exam_id, number)
+      VALUES (?, ?, ?)
+      ON DUPLICATE KEY UPDATE
+        exam_id = VALUES(exam_id),
+        number = VALUES(number);
+      `,
+      [sectionId, examId, 1] // Assuming section number is 1 for simplicity
+    );
+
+    // Ensure the module exists
+    await connection.execute(
+      `
+      INSERT INTO modules (module_id, section_id, number, module_name)
+      VALUES (?, ?, ?, ?)
+      ON DUPLICATE KEY UPDATE
+        section_id = VALUES(section_id),
+        number = VALUES(number),
+        module_name = VALUES(module_name);
+      `,
+      [moduleId, sectionId, 1, `Module ${moduleId}`] // Assuming module number is 1 for simplicity
+    );
+
+    // Update or insert the question
+    const [result] = await connection.execute(
+      `
+      INSERT INTO questions (
+        section, module, number, passage, prompt,
+        choice_A, choice_B, choice_C, choice_D, correct_answer
+      )
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ON DUPLICATE KEY UPDATE
+        module = VALUES(module),
+        number = VALUES(number),
+        passage = VALUES(passage),
+        prompt = VALUES(prompt),
+        choice_A = VALUES(choice_A),
+        choice_B = VALUES(choice_B),
+        choice_C = VALUES(choice_C),
+        choice_D = VALUES(choice_D),
+        correct_answer = VALUES(correct_answer);
+      `,
+      [
+        sectionId, // Assuming `id` is the question number
+        moduleId,
+        number,
+        passage,
+        prompt,
+        choice_A,
+        choice_B,
+        choice_C,
+        choice_D,
+        correct_answer,
+      ]
+    );
+
+    // Commit the transaction
+    await connection.commit();
+
+    return { success: true, message: "Exam updated successfully.", result };
+  } catch (error) {
+    // Rollback transaction in case of failure
+    if (connection) {
+      await connection.rollback();
+    }
+    console.error("Error updating exam:", error);
+    throw error;
+  } finally {
+    // Ensure the connection is released back to the pool
+    if (connection) {
+      connection.release();
+    }
+  }
+}
+
 
 async function createExam(title, description, duration) { //get specific user by putting a parameter
   const result = await db.query(`

@@ -107,8 +107,11 @@ CREATE TABLE questions (
     choice_C TEXT,
     choice_D TEXT,
     correct_answer CHAR(1), -- Correct answer (e.g., A, B, C, D)
-    FOREIGN KEY (module) REFERENCES modules(module_id) ON DELETE CASCADE
+    FOREIGN KEY (module) REFERENCES modules(module_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_question (number) -- Ensure uniqueness
 );
+
+DESCRIBE questions;
 
 INSERT INTO users (username, password, email) VALUES
 ('john_doe', 'password123', 'kyconf@gmail.com'),
@@ -125,7 +128,10 @@ INSERT INTO exams (title, description, assigned_to) VALUES
 ('History Test', 'A comprehensive test on world history, focusing on ancient civilizations.', 3);
 
 
-
+DELETE FROM questions;
+DROP TABLE questions;
+SET SQL_SAFE_UPDATES = 0;
+SET SQL_SAFE_UPDATES = 1;
 
 INSERT INTO questions (section, module, number, passage, prompt, choice_A, choice_B, choice_C, choice_D, correct_answer)
 VALUES
@@ -146,7 +152,11 @@ VALUES
 
 
 	
-
+DESCRIBE questions;
 DESCRIBE users;
 SELECT * from exams;
 DESCRIBE exams;
+
+SELECT * from questions;
+
+ALTER TABLE questions ADD UNIQUE KEY unique_question (section, module, number);

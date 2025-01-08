@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import styles from './ExamPage.module.css';
 import { API_URL } from '../../config/config';
-
+import Timer from './Timer'
 
 function ExamPage() {
   const { examId } = useParams(); // Extract the examId from the URL
@@ -69,7 +69,7 @@ function ExamPage() {
           <button className={styles.hideButton}>Hide</button>
         </div>
         <div className={styles.examTools}>
-          <div className={styles.timer}>28:45</div>
+          <div className={styles.timer}><Timer /></div>
           <button className={styles.toolButton}>
             <span>✎</span>
             Annotate
@@ -84,7 +84,7 @@ function ExamPage() {
       {/* Main Content */}
       <div className={styles.examContent}>
         <div className={styles.questionText}>
-          <p>{currentQ[`question_passage`]}</p>
+        <div dangerouslySetInnerHTML={{ __html: currentQ['question_passage'] }}></div>
         </div>
         
         <div className={styles.questionArea}>
@@ -98,7 +98,7 @@ function ExamPage() {
             </button>
           </div>
           
-          <p className={styles.questionPrompt}>{currentQ[`question_prompt`]}</p>
+          <p className={styles.questionPrompt} dangerouslySetInnerHTML={{ __html: currentQ[`question_prompt`] }}></p>
 
           <div className={styles.options}>
             {["A","B","C","D"].map((option) => (
@@ -108,7 +108,7 @@ function ExamPage() {
                 onClick={() => handleOptionSelect(option)}
               >
                 <span className={styles.optionLetter}>{option}</span>
-                {currentQ[`question_choice_${option}`]}
+                <div className={styles.choice} dangerouslySetInnerHTML={{ __html: currentQ[`question_choice_${option}`] }}></div>
               </button>
             ))}
           </div>
