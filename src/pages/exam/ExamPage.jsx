@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import styles from './ExamPage.module.css';
 import { API_URL } from '../../config/config';
@@ -10,6 +10,36 @@ function ExamPage() {
   const [isMarkedForReview, setIsMarkedForReview] = useState(false);
   const [preview, setPreview] = useState(null); // Initialize preview state
   const [selectedOptions, setSelectedOptions] = useState({}); // Object to store selections for each question
+
+  const [showCalculator, setShowCalculator] = useState(false); // State to toggle the calculator
+  const calculatorRef = useRef(null); // Ref for the calculator container
+
+  const toggleCalculator = () => {
+    if (!window.Desmos) {
+      console.error("Desmos library is not loaded.");
+      return;
+    }
+
+    setShowCalculator((prev) => !prev); // Toggle the visibility of the calculator
+  };
+
+
+  useEffect(() => {
+    let calculator;
+    if (showCalculator && window.Desmos) {
+      calculator = window.Desmos.GraphingCalculator(calculatorRef.current, {
+        expressions: true,
+        settingsMenu: true,
+      });
+
+    }
+
+    return () => {
+      if (calculator) {
+        calculator.destroy();
+      }
+    };
+  }, [showCalculator]); // Run this effect when `showCalculator` changes
 
   const fetchPreview = async () => {
     try {
@@ -60,6 +90,7 @@ function ExamPage() {
     }));
   };
 
+
   return (
     <div className={styles.examContainer}>
       {/* Header */}
@@ -74,19 +105,31 @@ function ExamPage() {
             <span>✎</span>
             Annotate
           </button>
-          <button className={styles.toolButton}>
-            <span>🖩</span>
-            Calculator
+          <button onClick={toggleCalculator} className={styles.toolButton}>
+          🖩 Calculator
           </button>
+
+          
         </div>
       </div>
 
       {/* Main Content */}
       <div className={styles.examContent}>
+      {showCalculator && (
+            <div ref={calculatorRef}
+            style={{
+              width: "96vw",
+              
+              height: "500px",
+              border: "1px solid #ccc",
+          
+              position: "absolute"
+            }}></div>
+          )}
         <div className={styles.questionText}>
         <div dangerouslySetInnerHTML={{ __html: currentQ['question_passage'] }}></div>
         </div>
-        
+
         <div className={styles.questionArea}>
           <div className={styles.questionHeader}>
             <div className={styles.questionNumber}>{currentQ[`question_number`]}</div>

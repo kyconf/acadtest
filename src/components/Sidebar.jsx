@@ -244,9 +244,7 @@ c74 -33 152 -111 185 -183 18 -38 22 -67 23 -143 0 -82 -4 -103 -26 -151 -25
 </svg>
  Announcements</button>
 
-      <button className={styles.logout} onClick={() => navButton('/')}>
-        Log Out
-      </button>
+
 
 
       </div>

@@ -33,7 +33,7 @@ function TeacherHome() {
         <Breadcrumb>
   <BreadcrumbList>
     <BreadcrumbItem>
-      <BreadcrumbLink href="/">Home</BreadcrumbLink>
+      <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
     </BreadcrumbItem>
     <BreadcrumbSeparator />
     <BreadcrumbItem>
@@ -57,7 +57,7 @@ function TeacherHome() {
                   backgroundColor: 'rgb(86, 145, 255)',
                   borderColor: 'rgb(86, 145, 255)',
                   borderRadius: 8,
-                  barThickness: 75,
+                  barThickness: 50,
                   data: [66, 96, 56, 70]
                 }]
               }}
