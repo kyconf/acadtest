@@ -37,7 +37,7 @@
   top: 0;
   z-index: 50;
   background-color: white;
-  border-bottom: 1px solid #e5e5e5;
+
   width: 100%;
 }
 
@@ -74,7 +74,7 @@
 .header th {
   position: sticky;
   top: 0;
-  background-color: #f9fafb;
+  background-color: #f6f6f6;
   color: #374151;
   font-weight: 600;
   padding: 12px 24px;
@@ -177,7 +177,7 @@ form button:hover {
     min-height: 100%; /* Restricts the table's height */
     overflow-y: auto; /* Enables vertical scrolling */
     overflow-x: auto; /* Enables horizontal scrolling for wide tables */
-    border: 1px solid #ccc; /* Optional: Add a border for the scrollable area */
+    border: 1px solid #f6f6f6;; /* Optional: Add a border for the scrollable area */
 
     border-collapse: collapse;
 
@@ -190,7 +190,7 @@ form button:hover {
     /* border: 2px solid #d61a1a; Optional: Add a border for clarity */
   }
   .header th {
-    background-color: rgb(210, 210, 210);
+    background-color: #f6f6f6;
     
     color: rgb(0, 0, 0);
     padding: 20px;
@@ -461,25 +461,28 @@ td {
 }
 
 .editBtn {
-  background-color: #3b82f6;
-  color: white;
+  background-color: #eaeaea;
+  color: black;
 }
 
 .editBtn:hover {
   background-color: #2563eb;
+  color:white;
 }
 
 .assignBtn {
-  background-color: #10b981;
-  color: white;
+  background-color: #eaeaea;
+  color: rgb(18, 17, 17);
 }
 
 .assignBtn:hover {
   background-color: #059669;
+  color: white;
 }
 
 .deleteBtn {
   background-color: #ef4444;
+  border-radius: 4px;
   color: white;
 }
 
@@ -512,21 +515,8 @@ td {
   box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
 }
 
-.submitButton {
-  align-self: flex-start;
-  padding: 8px 16px;
-  background-color: #2563eb;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.2s;
-}
 
-.submitButton:hover {
-  background-color: #1d4ed8;
-}
+
 
 .searchContainer {
   padding: 16px;
@@ -550,39 +540,39 @@ td {
   box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
 }
 
-/* Add this CSS for the Preview button */
 .previewBtn {
-  background-color: #007bff; /* Example color */
-  color: white;
-  border: none; /* Optional: remove border */
-  padding: 0.5rem 1rem; /* Optional: add padding */
-  border-radius: 5px; /* Optional: add border radius */
-  cursor: pointer; /* Change cursor to pointer */
-  transition: background-color 0.3s; /* Optional: add transition */
+  background-color: #eaeaea; 
+  color: rgb(11, 11, 11);
+  border: none; 
+
+
+  cursor: pointer;
+  transition: background-color 0.3s; 
 }
 
 .previewBtn:hover {
-  background-color: #0056b3; /* Darker shade on hover */
+  background-color: #d7b727; 
+  color: white;
 }
 
 .sidebarLight {
-  background-color: white; /* Light background */
-  color: black; /* Light text */
+  background-color: white; 
+  color: black; 
 }
 
 .sidebarDark {
-  background-color: gray; /* Dark background */
-  color: white; /* Dark text */
+  background-color: gray; 
+  color: white; 
 }
 
 .overlay {
-  background-color: rgba(0, 0, 0, 0.5); /* Grey overlay for the entire page */
+  background-color: rgba(0, 0, 0, 0.5); 
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 50; /* Ensure it covers the content */
+  z-index: 50; 
 }
 
 .pagination {
@@ -612,9 +602,9 @@ td {
   border-color: #1677ff;
 }
 
-.pageButton:hover:not(:disabled) {
+/* .pageButton:hover:not(:disabled) {
   background-color: #f5f5f5;
-}
+} */
 
 .activePage:hover {
   background-color: #4096ff;
@@ -675,11 +665,16 @@ td {
   cursor: pointer;
   font-weight: 500;
   font-size: 14px;
+  
 }
+
 
 .submitButton:hover {
-  background-color: #4096ff;
+  background-color: rgb(86, 145, 255);
 }
 
 
 
+.breadcrumbContainer {
+  margin-bottom: 1rem;
+}

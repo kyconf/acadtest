@@ -5,6 +5,14 @@ import styles from './StudentList.module.css'
 import { API_URL } from '../../config/config';
 import Header from '../../components/Header';
 import Students from '../../components/Students';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
 function StudentList() {
   const navigate = useNavigate();
   
@@ -92,6 +100,19 @@ function StudentList() {
         </div>
         
         <div className={styles.pageContent}>
+                  <div className={styles.breadcrumbContainer}>
+                  <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage> Student List</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+          </div>
         <Students />
           <div className={styles.twrapper}>
             <table className={styles.examlist}>

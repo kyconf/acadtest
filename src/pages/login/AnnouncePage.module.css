@@ -68,4 +68,14 @@
     margin-bottom: 1rem;
   }
   
+  .breadcrumbContainer {
+    margin-bottom: 1rem;
+  }
+  .headerWrapper {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background-color: white;
   
+    width: 100%;
+  }

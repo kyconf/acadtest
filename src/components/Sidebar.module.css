@@ -32,7 +32,7 @@
   background-color: var(--clr);
   color: #000000;
   border-radius: 8px;
-  font-weight: 400;
+  font-weight: 600;
   padding: 0.75rem 1.5rem;
   padding-left: 20px;
   white-space: nowrap;
@@ -89,7 +89,7 @@
 
 
 .clicked, .clicked g {
-  background-color:rgb(86, 145, 255);
+  background-color:#1677ff;
   color: white;
   fill: white;
 }
@@ -140,3 +140,11 @@ img {
   margin-top: 3rem;
 }
 
+.new {
+  margin-top: 9rem;
+}
+.new:hover {
+  color: white;
+  background-color: rgb(236, 115, 96);
+  transition: all 0.2s ease-in-out;
+}

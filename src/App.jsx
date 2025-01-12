@@ -14,6 +14,7 @@ import ExamEditor from './pages/exam/ExamEditor';
 import AnnouncePage from './pages/login/AnnouncePage.jsx';
 import ExamEdit from './pages/exam/ExamEdit.jsx';
 import Timer from './pages/exam/Timer.jsx';
+import CalendarComponent from './components/CalendarComponent.jsx'
 // This is the first page, aka the login page
 // to run app do npm run dev
 
@@ -91,6 +92,10 @@ function App() {
     {
       path: "/timer",
       element: <Timer />
+    },
+    {
+      path: "/calendar",
+      element: <CalendarComponent />
     }
   ]);
 

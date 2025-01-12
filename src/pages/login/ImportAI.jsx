@@ -3,6 +3,14 @@ import styles from './ImportAI.module.css';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
 import Import from '../../components/Import';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
 
 function ImportAI() {
   const [exams, setExams] = useState([]);
@@ -12,7 +20,7 @@ function ImportAI() {
   useEffect(() => {
     const fetchExams = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/exams');
+        const response = await fetch('http://localhost:3000/importai');
         const data = await response.json();
         setExams(data);
       } catch (error) {
@@ -42,7 +50,22 @@ function ImportAI() {
         <div className={styles.headerWrapper}>
           <Header />
         </div>
+
+
         <div className={styles.pageContent}>
+        <div className={styles.breadcrumbContainer}>
+                <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Import an exam</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        </div>
           <Import />
           
           <div className={styles.formSection}>
@@ -57,7 +80,7 @@ function ImportAI() {
                 className={styles.fileInput}
               />
             </div>
-
+            
             <div className={styles.formGroup}>
               <label>Choose a test:</label>
               <select 
@@ -74,7 +97,7 @@ function ImportAI() {
             </div>
 
             <div className={styles.formGroup}>
-              <label>Enter Text:</label>
+              <label>Enter Prompt:</label>
               <textarea
                 className={styles.textarea}
                 value={inputText}

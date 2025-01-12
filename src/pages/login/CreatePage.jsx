@@ -17,6 +17,14 @@ import {
 } from "../../components/ui/alert-dialog";
 import Create from '../../components/Create';
 import Header from '../../components/Header';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
 
 
 function CreatePage() {
@@ -180,6 +188,19 @@ function CreatePage() {
           <Header />
         </div>
         <div className={styles.pageContent}>
+                  <div className={styles.breadcrumbContainer}>
+                  <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/dashboard">Home</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage> Create an exam</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+          </div>
           <Create />
           {alert.show && (
             <div className={`${styles.alert} ${styles[alert.type]}`}>
@@ -200,7 +221,7 @@ function CreatePage() {
               </div>
 
               <div className={styles.formGroup}>
-                <label>Module:</label>
+                {/* <label>Module:</label>
                 <select
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -209,7 +230,7 @@ function CreatePage() {
                   <option value="" disabled>Select a Module</option>
                   <option value="Reading and Writing">Reading & Writing</option>
                   <option value="Math">Math</option>
-                </select>
+                </select> */}
               </div>
 
               <div className={styles.formGroup}>
@@ -223,7 +244,7 @@ function CreatePage() {
                 />
               </div>
 
-                <label>Section:</label>
+                {/* <label>Section:</label>
                 <select
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -232,10 +253,10 @@ function CreatePage() {
                   <option value="" disabled>Select a Module</option>
                   <option value="Reading and Writing">Reading & Writing</option>
                   <option value="Math">Math</option>
-                </select>
+                </select> */}
               
 
-              <button type="submit">Create Exam</button>
+              <button className={styles.submitButton}type="submit">Create Exam</button>
             </form>
           </div>
           <div className={styles.twrapper}>
@@ -270,13 +291,19 @@ function CreatePage() {
                           Edit
                         </button>
                         <button 
+                          className={`${styles.actionBtn} ${styles.previewBtn}`}
+                          onClick={() => handlePreview(exam.exam_id)}
+                        >
+                          Preview
+                        </button>
+                        <button 
                           className={`${styles.actionBtn} ${styles.assignBtn}`}
                           onClick={() => handleAssign(exam.exam_id)}
                         >
                           Assign
                         </button>
 
-                      <div className={styles.deleteBtn}>
+                      <div>
                         <AlertDialog>
                           <AlertDialogTrigger className={`${styles.actionBtn} ${styles.deleteBtn}`}>
                             Delete
@@ -291,18 +318,13 @@ function CreatePage() {
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction>Delete</AlertDialogAction>
+                              <AlertDialogAction className={styles.deleteBtn}>Delete</AlertDialogAction>
                             </AlertDialogFooter>
                           </AlertDialogContent>
                         </AlertDialog>
                       </div>
 
-                        <button 
-                          className={`${styles.actionBtn} ${styles.editBtn}`}
-                          onClick={() => handlePreview(exam.exam_id)}
-                        >
-                          Preview
-                        </button>
+
                       </td>
                     </tr>
                   ))

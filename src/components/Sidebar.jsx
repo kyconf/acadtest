@@ -167,7 +167,7 @@ m149 -297 c47 -17 1938 -1112 1938 -1122 -1 -4 -1163 -681 -1745 -1016 -208
         Student List
       </button>
 
-      <button className={`${styles.button} ${
+      {/* <button className={`${styles.button} ${
           location.pathname === '/admin' ? styles.clicked : ''
         }`} onClick={() => navButton('/admin')}>
 <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
@@ -199,7 +199,7 @@ fill="#000000" stroke="none">
 </svg>
 
         Profile
-      </button>
+      </button> */}
       <button className={`${styles.button} ${
           location.pathname === '/announcements' ? styles.clicked : ''
         }`} onClick={() => navButton('/announcements')}><svg version="1.0" xmlns="http://www.w3.org/2000/svg"
@@ -246,7 +246,7 @@ c74 -33 152 -111 185 -183 18 -38 22 -67 23 -143 0 -82 -4 -103 -26 -151 -25
 
 
 
-
+<button className={styles.new}>Log out</button>
       </div>
 
   </div>

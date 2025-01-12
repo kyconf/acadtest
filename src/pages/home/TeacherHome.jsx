@@ -48,7 +48,7 @@ function TeacherHome() {
 
           <div className={styles.graphcontainer}>
             <div className={styles.graph}>
-              <h1> Recent Exams: Exam 1 </h1>
+              <h1> Exam 1: SAT Practice </h1>
               <Bar 
               data={{
                 labels: ['S1M1 R&W', 'S1M2 R&W', 'S2M1 Math', 'S2M2 Math'],
@@ -57,7 +57,7 @@ function TeacherHome() {
                   backgroundColor: 'rgb(86, 145, 255)',
                   borderColor: 'rgb(86, 145, 255)',
                   borderRadius: 8,
-                  barThickness: 50,
+                  barThickness: 75,
                   data: [66, 96, 56, 70]
                 }]
               }}
