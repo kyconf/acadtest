@@ -246,7 +246,7 @@ c74 -33 152 -111 185 -183 18 -38 22 -67 23 -143 0 -82 -4 -103 -26 -151 -25
 
 
 
-<button className={styles.new}>Log out</button>
+<button className={styles.new} onClick={() => navButton('/')}>Log out</button>
       </div>
 
   </div>
