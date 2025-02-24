@@ -1,0 +1,46 @@
+.examHeader {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    border-bottom: 2px dashed #e0e0e0;
+    background-color: white;
+    user-select: none;
+  }
+
+  .sectionInfo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .sectionInfo h2 {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin: 0;
+  }
+
+  .examTools {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+  }
+  .timer {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-right: 25vw;
+  }
+  
+  .timerWrapper {
+    margin-left: 3px;
+  }
+
+  .toolButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #333;
+  }

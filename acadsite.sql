@@ -160,3 +160,22 @@ DESCRIBE exams;
 SELECT * from questions;
 
 ALTER TABLE questions ADD UNIQUE KEY unique_question (section, module, number);
+
+
+
+CREATE TABLE user_answers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    question_answer VARCHAR(255) NOT NULL,
+    module INT, 
+    number INT,
+    annotate TEXT,
+    journal TEXT,
+    choice_A TEXT,
+    choice_B TEXT,
+    choice_C TEXT,
+    choice_D TEXT,
+    correct_answer CHAR(1), -- Correct answer (e.g., A, B, C, D)
+    FOREIGN KEY (module) REFERENCES modules(module_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_question (number) -- Ensure uniqueness
+);
+

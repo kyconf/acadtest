@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import styles from './ExamPage.module.css';
 import { API_URL } from '../../config/config';
 import Timer from './Timer'
-
+import abc from '../../assets/abc.png';
 function ExamPage() {
   const { examId } = useParams(); // Extract the examId from the URL
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -13,6 +13,13 @@ function ExamPage() {
 
   const [showCalculator, setShowCalculator] = useState(false); // State to toggle the calculator
   const calculatorRef = useRef(null); // Ref for the calculator container
+  const [selectedExam, setSelectedExam] = useState(null);
+
+  const handleSelectChange = (e) => {
+    const selectedId = e.target.value;
+    const exam = exams.find(exam => exam.exam_id.toString() === selectedId);
+    setSelectedExam(exam);
+  };
 
   const toggleCalculator = () => {
     if (!window.Desmos) {
@@ -90,6 +97,30 @@ function ExamPage() {
     }));
   };
 
+    const handleDelete = async (e) => {
+      e.preventDefault(); // Prevent form from reloading the page
+  
+      try {
+        const response = await fetch(`${API_URL}/preview-exams/${examId}`, { //port 3000 /a-register
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+  
+        if (response.ok) {
+          const result = await response.json();
+          alert(result.message); // Show success message
+        } else {
+          const errorData = await response.json();
+          alert(`Error: ${errorData.message}`); // Show error message
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An unexpected error occurred.');
+      }
+    };
   
 
   return (
@@ -98,10 +129,11 @@ function ExamPage() {
       <div className={styles.examHeader}>
         <div className={styles.sectionInfo}>
           <h2>Section {currentQ[`section_id`]}, Module {currentQ[`module_id`]}: {currentQ[`module_name`]}</h2>
-          <button className={styles.hideButton}>Hide</button>
+         
         </div>
         <div className={styles.examTools}>
-          <div className={styles.timer}><Timer /></div>
+          <div className={styles.timer}>  <div className={styles.timerWrapper}><Timer /></div><button className={styles.hideButton}>Hide</button></div>
+          
           <button className={styles.toolButton}>
             <span>✎</span>
             Annotate
@@ -130,6 +162,7 @@ function ExamPage() {
         <div className={styles.questionText}>
         <div dangerouslySetInnerHTML={{ __html: currentQ['question_passage'] }}></div>
         </div>
+        <div className={styles.divider}></div>
 
         <div className={styles.questionArea}>
           <div className={styles.questionHeader}>
@@ -138,8 +171,11 @@ function ExamPage() {
               className={`${styles.reviewButton} ${isMarkedForReview ? styles.marked : ''}`}
               onClick={() => setIsMarkedForReview(!isMarkedForReview)}
             >
-              Mark for Review
+          
+
             </button>
+            
+          <div className={styles.abcWrapper}><img className={styles.abc} src={abc}></img></div>
           </div>
           
           <p className={styles.questionPrompt} dangerouslySetInnerHTML={{ __html: currentQ[`question_prompt`] }}></p>
@@ -163,6 +199,19 @@ function ExamPage() {
       <div className={styles.examFooter}>
         <div className={styles.userInfo}>Yiyeon Su</div>
         <div className={styles.questionNav}>
+          <div className={styles.questionPagination}>
+              <select 
+                onChange={handleSelectChange}
+                className={styles.selectPagination}
+              > 
+               
+                {preview.map((exam, index) => (
+                  <option key={exam.exam_id || index} value={exam.exam_id}>
+                    Question {exam.question_number} of 3
+                  </option>
+                ))}
+              </select>
+          </div>
           <button 
             className={styles.navButton} 
             onClick={handlePrevious}
