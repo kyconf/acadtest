@@ -315,62 +315,109 @@ function ExamPage() {
     }
   };
 
-  // Update the QuestionReview component
-  const QuestionReview = () => (
-    <div className={styles.reviewModal}>
-      <div className={styles.reviewContent}>
-        <h2>Review Your Answers</h2>
-        <div className={styles.questionGrid}>
-          {preview.map((q, index) => (
-            <button
-              key={q.question_number}
-              className={`${styles.questionButton} 
-                ${selectedOptions[`question_${q.question_number}`] ? styles.answered : ''} 
-                ${markedForReview[q.question_number] ? styles.marked : ''}`}
-              onClick={() => {
-                setCurrentQuestion(index);
-                setShowReview(false);
-              }}
+  // Add this function to handle showing the review modal
+  const handleShowReview = () => {
+    setShowReview(true);
+  };
+
+  // Update the QuestionReview component to show marked questions and fix the answered status
+  const QuestionReview = () => {
+    return (
+      <div className={styles.reviewModal}>
+        <div className={styles.reviewContent}>
+          <h2>Review Your Answers</h2>
+          <div className={styles.reviewList}>
+            {preview.map((question, index) => (
+              <div key={index} className={styles.reviewItem}>
+                <div className={styles.reviewHeader}>
+                  <h3>Question {question.question_number}</h3>
+                  <div className={styles.questionStatus}>
+                    {markedForReview[question.question_number] && (
+                      <span className={styles.markedForReview}>Marked for Review</span>
+                    )}
+                    {selectedOptions[`question_${question.question_number}`] ? (
+                      <span className={styles.answered}>Answered</span>
+                    ) : (
+                      <span className={styles.unanswered}>Not Answered</span>
+                    )}
+                  </div>
+                </div>
+                <div className={styles.reviewQuestion}>
+                  <div dangerouslySetInnerHTML={{ __html: question.prompt }} />
+                  <div className={styles.selectedAnswer}>
+                    Selected Answer: {selectedOptions[`question_${question.question_number}`] || 'None'}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className={styles.reviewButtons}>
+            <button 
+              className={styles.submitButton} 
+              onClick={handleSubmitExam}
             >
-              {q.question_number}
-              {markedForReview[q.question_number] && <FlagIcon />}
+              Submit Exam
+            </button>
+            <button 
+              className={styles.returnButton}
+              onClick={() => setShowReview(false)}
+            >
+              Return to Exam
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Update the QuestionNavigation component
+  const QuestionNavigation = () => {
+    return (
+      <div className={styles.questionNavigation}>
+        <div className={styles.navigationHeader}>
+          <h3>Section 1: Reading and Writing Questions</h3>
+          <button className={styles.closeNav}>×</button>
+        </div>
+        
+        <div className={styles.navigationLegend}>
+          <div className={styles.legendItem}>
+            <span className={styles.currentMarker}>○</span> Current
+          </div>
+          <div className={styles.legendItem}>
+            <span className={styles.unansweredMarker}>□</span> Unanswered
+          </div>
+          <div className={styles.legendItem}>
+            <span className={styles.reviewMarker}>⚑</span> For Review
+          </div>
+        </div>
+
+        <div className={styles.questionButtons}>
+          {preview.map((question, index) => (
+            <button
+              key={index}
+              className={`${styles.questionButton} 
+                ${currentQuestion === index ? styles.current : ''}
+                ${!selectedOptions[`question_${question.question_number}`] ? styles.unanswered : ''}
+                ${markedForReview[question.question_number] ? styles.markedForReview : ''}`}
+              onClick={() => setCurrentQuestion(index)}
+            >
+              {question.question_number}
+              {markedForReview[question.question_number] && 
+                <span className={styles.reviewFlag}>⚑</span>
+              }
             </button>
           ))}
         </div>
-        <div className={styles.reviewLegend}>
-          <div><span className={styles.answered}>●</span> Answered</div>
-          <div><FlagIcon /> Marked for Review</div>
-          <div><span className={styles.unanswered}>●</span> Unanswered</div>
-        </div>
-        <div className={styles.reviewButtons}>
-          {showSubmitReview ? (
-            <>
-              <button 
-                className={styles.submitButton} 
-                onClick={handleSubmitExam}
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? 'Submitting...' : 'Submit Exam'}
-              </button>
-              <button 
-                className={styles.returnButton} 
-                onClick={() => {
-                  setShowReview(false);
-                  setShowSubmitReview(false);
-                }}
-              >
-                Return to Exam
-              </button>
-            </>
-          ) : (
-            <button className={styles.closeButton} onClick={() => setShowReview(false)}>
-              Close Review
-            </button>
-          )}
-        </div>
+
+        <button 
+          className={styles.reviewPageButton}
+          onClick={() => setShowReview(true)}
+        >
+          Go to Review Page
+        </button>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className={styles.examContainer}>
@@ -536,10 +583,10 @@ function ExamPage() {
           Question {currentQ.question_number} of 3
           {currentQuestion === preview.length - 1 ? (
             <button 
-              className={styles.submitButton}
-              onClick={handleSubmitExam}
+              className={styles.reviewButton}
+              onClick={handleShowReview}
             >
-              Submit Exam
+              Review Answers
             </button>
           ) : (
             <button 

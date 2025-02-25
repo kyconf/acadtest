@@ -141,8 +141,8 @@
   justify-content: center;
   background: #333;
   color: white;
-  font-weight: bold;
-  
+  border-radius: 4px;
+  font-weight: 500;
 }
 
 .reviewButton {
@@ -150,23 +150,22 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
+  background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
-  background: white;
   cursor: pointer;
   font-size: 0.9rem;
   transition: all 0.2s ease;
+  color: #666;
 }
 
-.reviewButton.marked {
-  background: #fff3dc;
-  border-color: #ffd700;
-  color: #000;
+.reviewButton:hover {
+  background: #f5f5f5;
 }
 
 .flagIcon {
-  font-size: 1.2rem;
-  opacity: 0.6;
+  font-size: 0.9rem;
+  color: #666;
 }
 
 .marked .flagIcon {
@@ -352,7 +351,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -360,11 +359,50 @@
 }
 
 .reviewContent {
-  background: white;
+  background-color: white;
   padding: 2rem;
   border-radius: 8px;
-  width: 80%;
+  width: 90%;
   max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.reviewList {
+  margin: 2rem 0;
+}
+
+.reviewItem {
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.reviewHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.answered {
+  color: #52c41a;
+  font-weight: 500;
+}
+
+.unanswered {
+  color: #ff4d4f;
+  font-weight: 500;
+}
+
+.reviewQuestion {
+  color: #333;
+}
+
+.selectedAnswer {
+  margin-top: 1rem;
+  font-weight: 500;
 }
 
 .questionGrid {
@@ -438,4 +476,180 @@
   justify-content: center;
   gap: 1rem;
   margin-top: 2rem;
+}
+
+.questionNavigation {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.navigationHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.closeNav {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+}
+
+.navigationLegend {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.questionButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  justify-content: center;
+}
+
+.questionButton {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  position: relative;
+  font-weight: 500;
+}
+
+.questionButton.current {
+  background: #1677ff;
+  color: white;
+  border-color: #1677ff;
+}
+
+.questionButton.unanswered {
+  border-style: dashed;
+}
+
+.questionButton.marked {
+  border-color: #1677ff;
+}
+
+.reviewFlag {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  color: #ff4d4f;
+  font-size: 0.8rem;
+}
+
+.reviewPageButton {
+  width: 100%;
+  padding: 0.75rem;
+  background: #4096ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.reviewPageButton:hover {
+  background: #1677ff;
+}
+
+.questionButton.markedForReview {
+  border-color: #ff4d4f;
+  border-style: solid;
+}
+
+.questionStatus {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.markedForReview {
+  color: #ff4d4f;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.markedForReview::before {
+  content: "⚑";
+  font-size: 0.8rem;
+}
+
+.questionActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.markReviewButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  color: #666;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.markReviewButton:hover {
+  background: #f5f5f5;
+}
+
+.markReviewButton.marked,
+.reviewButton.marked {
+  border-color: #ff4d4f;
+  color: #ff4d4f;
+}
+
+.flagIcon {
+  font-size: 0.9rem;
+}
+
+/* Update the review flag style */
+.reviewFlag {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  color: #ff4d4f;
+  font-size: 0.8rem;
+}
+
+/* Update the marked question button style */
+.questionButton.markedForReview {
+  border-color: #ff4d4f;
+  border-style: solid;
 }
