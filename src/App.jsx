@@ -109,7 +109,7 @@ function App() {
       element: <StudentDashboard />
     },
     {
-      path: "/teacher/submissions",
+      path: "/submissions",
       element: <SubmissionsPage />
     }
   ]);

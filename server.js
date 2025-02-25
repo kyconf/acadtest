@@ -563,6 +563,41 @@ app.post('/assign-exam', async (req, res) => {
   }
 });
 
+// Update the getStudents function to match your database structure
+async function getStudents() {
+  try {
+    const [rows] = await db.execute(`
+      SELECT 
+        users.id,
+        users.username,
+        users.email,
+        users.role
+      FROM 
+        users
+      WHERE 
+        users.role = 'Student'
+      ORDER BY 
+        users.username ASC
+    `);
+    console.log('Fetched students:', rows);
+    return rows;
+  } catch (error) {
+    console.error('Error in getStudents:', error);
+    throw error;
+  }
+}
+
+// The endpoint stays the same
+app.get('/students', async (req, res) => {
+  try {
+    const students = await getStudents();
+    res.json(students);
+  } catch (error) {
+    console.error('Error fetching students:', error);
+    res.status(500).json({ message: 'Failed to fetch students' });
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
@@ -573,7 +608,7 @@ app.listen(PORT, () => {
 // async function initializeDatabase() {
 //     try {
 //         console.log("Starting database initialization...");
-        
+//         
 //         // Set a timeout for the database operations
 //         const timeout = setTimeout(() => {
 //             console.error("Database initialization timed out");
@@ -628,7 +663,7 @@ app.listen(PORT, () => {
 
 //         // Clear the timeout since we're done
 //         clearTimeout(timeout);
-        
+//         
 //         console.log("Database initialization completed successfully");
 //     } catch (err) {
 //         console.error("Error initializing database:", err);
@@ -643,7 +678,7 @@ app.listen(PORT, () => {
 //     try {
 //         // Test database connection first
 //         await testConnection();
-        
+//         
 //         // Initialize database
 //         const dbInitialized = await initializeDatabase();
 //         if (!dbInitialized) {

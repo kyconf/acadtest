@@ -39,7 +39,7 @@ function LoginBox() {
 
       if (response.ok) {
         // Check username to determine if student
-        if (formData.username === 'john_doe' || formData.username === 'jane_doe') {
+        if (formData.username === 'Student1' || formData.username === 'Student2' || formData.username === 'Student3') {
           navigate('/student/dashboard'); // Redirect to student dashboard
         } else {
           navigate('/dashboard'); // Teacher dashboard

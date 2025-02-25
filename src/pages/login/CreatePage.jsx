@@ -178,28 +178,49 @@ function CreatePage() {
 
     };
 
-    const [selectedUsers, setSelectedUsers] = useState([]); // Add this state
+    const [selectedUsers, setSelectedUsers] = useState([]);
 
-    // Add state to store the current exam being assigned
+    // Add this state for tracking students and selections
+    const [students, setStudents] = useState([]);
+    const [selectedStudents, setSelectedStudents] = useState([]);
     const [currentExam, setCurrentExam] = useState(null);
 
-    // Update handleAssignClick to store the exam
-    const handleAssignClick = (exam) => {
-      setCurrentExam(exam); // Store the exam being assigned
-      setSelectedStudents([]); // Clear previous selections
-      setShowAssignModal(true); // Show the modal
+    // Add this function to fetch students
+    const fetchStudents = async () => {
+      try {
+        const response = await fetch(`${API_URL}/students`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch students');
+        }
+        const data = await response.json();
+        console.log('Fetched students:', data); // For debugging
+        setStudents(data);
+      } catch (error) {
+        console.error('Error fetching students:', error);
+      }
     };
 
-    // Add mock student data
-    const mockStudents = [
-      { id: 1, name: "John Doe", username: "john_doe" },
-      { id: 2, name: "Jane Smith", username: "jane_smith" },
-      { id: 3, name: "Bob Wilson", username: "bob_wilson" }
-    ];
+    // Update your handleAssignClick function
+    const handleAssignClick = (exam) => {
+      setCurrentExam(exam);
+      setSelectedStudents([]); // Reset selections
+      fetchStudents(); // Fetch students when modal opens
+      setShowAssignModal(true);
+    };
+
+    // Add the student selection handler
+    const handleStudentSelection = (studentId) => {
+      setSelectedStudents(prev => {
+        if (prev.includes(studentId)) {
+          return prev.filter(id => id !== studentId);
+        } else {
+          return [...prev, studentId];
+        }
+      });
+    };
 
     // Add state for assignment modal
     const [showAssignModal, setShowAssignModal] = useState(false);
-    const [selectedStudents, setSelectedStudents] = useState([]);
 
     // Update handleAssignExam to use currentExam
     const handleAssignExam = () => {
@@ -447,38 +468,32 @@ function CreatePage() {
           <div className={styles.modalContent}>
             <h2>Assign Exam: {currentExam?.title}</h2>
             <div className={styles.studentList}>
-              {mockStudents.map(student => (
-                <label key={student.id} className={styles.studentItem}>
-                  <input
-                    type="checkbox"
-                    checked={selectedStudents.includes(student.id)}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setSelectedStudents(prev => [...prev, student.id]);
-                      } else {
-                        setSelectedStudents(prev => 
-                          prev.filter(id => id !== student.id)
-                        );
-                      }
-                    }}
-                  />
-                  {student.name} ({student.username})
-                </label>
-              ))}
+              {students.length > 0 ? (
+                students.map((student) => (
+                  <label key={student.id} className={styles.studentItem}>
+                    <input
+                      type="checkbox"
+                      checked={selectedStudents.includes(student.id)}
+                      onChange={() => handleStudentSelection(student.id)}
+                    />
+                    <span>{student.username} - {student.email}</span>
+                  </label>
+                ))
+              ) : (
+                <p>Loading students...</p>
+              )}
             </div>
-            <div className={styles.modalButtons}>
+            <div className={styles.modalActions}>
               <button 
+                onClick={() => handleAssignExam()} 
                 className={styles.assignButton}
-                onClick={() => {
-                  handleAssignExam();
-                  setShowAssignModal(false);
-                }}
+                disabled={selectedStudents.length === 0}
               >
                 Assign
               </button>
               <button 
+                onClick={() => setShowAssignModal(false)} 
                 className={styles.cancelButton}
-                onClick={() => setShowAssignModal(false)}
               >
                 Cancel
               </button>
