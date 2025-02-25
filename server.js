@@ -462,7 +462,7 @@ async function updateExam(
       )
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       ON DUPLICATE KEY UPDATE
-        module = VALUES(module),
+        module_id = VALUES(module_id),
         number = VALUES(number),
         passage = VALUES(passage),
         prompt = VALUES(prompt),
