@@ -179,3 +179,13 @@ CREATE TABLE user_answers (
     UNIQUE KEY unique_question (number) -- Ensure uniqueness
 );
 
+CREATE TABLE IF NOT EXISTS exam_assignments (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  exam_id INT NOT NULL,
+  student_id INT NOT NULL,
+  assigned_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (exam_id) REFERENCES exams(exam_id),
+  FOREIGN KEY (student_id) REFERENCES users(id),
+  UNIQUE KEY unique_assignment (exam_id, student_id) -- Prevent duplicate assignments
+);
+

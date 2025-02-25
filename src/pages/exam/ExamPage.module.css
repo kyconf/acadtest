@@ -38,13 +38,11 @@
 }
 
 .hideButton {
-  padding: 0.25rem 1rem;
-  
-  border-radius: 15px;
-  border: 1px solid #313131;
+  margin-left: 1rem;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
   background: white;
-  color:black;
-  font-size: 10px;
   cursor: pointer;
 }
 
@@ -73,10 +71,10 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  border: none;
-  background: none;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
   cursor: pointer;
-  color: #333;
 }
 
 .examContent {
@@ -102,7 +100,11 @@
   text-align: justify;
   font-size: 1rem;
   font-family: 'Noto Serif', serif;
-
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  position: relative;
 }
 
 .questionArea {
@@ -144,18 +146,31 @@
 }
 
 .reviewButton {
-  padding: 0.2rem 0.5rem;
-  
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
   border-radius: 4px;
+  background: white;
   cursor: pointer;
-  color:black;
-  background-color: rgb(230, 230, 230);
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
 }
 
 .reviewButton.marked {
-  background: #ffd700;
+  background: #fff3dc;
   border-color: #ffd700;
-  color: white;
+  color: #000;
+}
+
+.flagIcon {
+  font-size: 1.2rem;
+  opacity: 0.6;
+}
+
+.marked .flagIcon {
+  opacity: 1;
 }
 
 .options {
@@ -291,4 +306,136 @@
 .abcWrapper:hover {
   background-color: rgb(135, 222, 248);
   cursor: pointer;
+}
+
+.crossedOut {
+  text-decoration: line-through;
+  opacity: 0.5;
+  color: #999;
+}
+
+.highlighted {
+  background-color: yellow !important;
+}
+
+.annotating {
+  cursor: text;
+}
+
+/* Remove old annotation styles */
+.annotationArea,
+.annotationInput {
+  display: none;
+}
+
+.calculator {
+  user-select: none;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.calculatorHeader {
+  background: #f5f5f5;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  cursor: grab;
+}
+
+.calculatorHeader:active {
+  cursor: grabbing;
+}
+
+.reviewModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.reviewContent {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 800px;
+}
+
+.questionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.questionButton {
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  position: relative;
+}
+
+.questionButton.answered {
+  background: #e6f4ff;
+  border-color: #1677ff;
+}
+
+.questionButton.marked {
+  border-color: #ffd700;
+}
+
+.reviewLegend {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin: 1rem 0;
+}
+
+.closeButton {
+  padding: 0.5rem 1rem;
+  background: #1677ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.submitButton {
+  padding: 0.5rem 1rem;
+  background: #52c41a;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.submitButton:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.returnButton {
+  padding: 0.5rem 1rem;
+  background: #666;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 1rem;
+}
+
+.reviewButtons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
 }

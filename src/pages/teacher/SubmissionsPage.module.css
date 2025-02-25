@@ -1,0 +1,282 @@
+.main {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebarContainer {
+  width: 250px;
+  background-color: #f5f5f5;
+}
+
+.contentArea {
+  flex: 1;
+  padding: 20px;
+}
+
+.pageContent {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.table th,
+.table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.table th {
+  background: #f9fafb;
+  font-weight: 500;
+}
+
+.reviewButton {
+  padding: 4px 12px;
+  background: #1677ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.reviewButton:hover {
+  background: #4096ff;
+}
+
+.noSubmissions {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+/* Modal styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 95%;
+  max-width: 1200px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modalHeader {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+}
+
+.modalHeaderTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.closeModalButton {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+  padding: 0.5rem;
+  line-height: 1;
+}
+
+.closeModalButton:hover {
+  color: #333;
+}
+
+.examPreview {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.questionReview {
+  display: flex;
+  gap: 2rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 2rem;
+}
+
+.questionPassage {
+  flex: 1;
+  padding: 1rem;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+.questionContent {
+  flex: 1;
+  padding: 1rem;
+}
+
+.questionHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.questionNumber {
+  background: #333;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.optionReview {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid #eee;
+  border-radius: 4px;
+}
+
+.selectedAnswer {
+  background: #e6f4ff;
+  border-color: #1677ff;
+}
+
+.optionLetter {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #333;
+  border-radius: 50%;
+  font-weight: 500;
+}
+
+.selectedAnswer .optionLetter {
+  background: #1677ff;
+  color: white;
+  border-color: #1677ff;
+}
+
+.modalFooter {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.submissionInfo {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: #f5f5f5;
+  border-radius: 4px;
+}
+
+.answers {
+  margin: 1rem 0;
+}
+
+.answer {
+  padding: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.closeButton {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background: #666;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.closeButton:hover {
+  background: #888;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 8px;
+}
+
+.deleteButton {
+  padding: 4px 12px;
+  background: #ff4d4f;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.deleteButton:hover {
+  background: #ff7875;
+}
+
+/* Update table cell padding for action buttons */
+.table td:last-child {
+  padding-right: 20px;
+  min-width: 160px;
+}
+
+.score {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #333;
+  padding: 0.5rem 1rem;
+  background: #f5f5f5;
+  border-radius: 4px;
+}
+
+.correctAnswer {
+  background: #f6ffed;
+  border-color: #52c41a;
+}
+
+.incorrectAnswer {
+  background: #fff2f0;
+  border-color: #ff4d4f;
+}
+
+.correctAnswerUnselected {
+  border-color: #52c41a;
+  border-style: dashed;
+}
+
+.correctAnswer .optionLetter {
+  background: #52c41a;
+  color: white;
+  border-color: #52c41a;
+}
+
+.incorrectAnswer .optionLetter {
+  background: #ff4d4f;
+  color: white;
+  border-color: #ff4d4f;
+} 

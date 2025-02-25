@@ -1,0 +1,82 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.main {
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebarContainer {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  background-color: white;
+  border-right: 1px solid #e5e5e5;
+  z-index: 100;
+}
+
+.contentArea {
+  flex: 1;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #fefdfd;
+  overflow: hidden;
+}
+
+.contentWrapper {
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.breadcrumbContainer {
+  margin-bottom: 1rem;
+}
+
+.examList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.examCard {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.examCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.examCard h3 {
+  margin: 0 0 1rem 0;
+  color: #1677ff;
+}
+
+.examCard button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background: #1677ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  font-weight: 500;
+}
+
+.examCard button:hover {
+  background: #4096ff;
+} 

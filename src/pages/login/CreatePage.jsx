@@ -78,7 +78,7 @@ function CreatePage() {
     const [formData, setFormData] = useState({
       title: '',
       description: '',
-      duration:0
+      duration: 0
     });
   
     // State for displaying success or error messages
@@ -178,6 +178,74 @@ function CreatePage() {
 
     };
 
+    const [selectedUsers, setSelectedUsers] = useState([]); // Add this state
+
+    // Add state to store the current exam being assigned
+    const [currentExam, setCurrentExam] = useState(null);
+
+    // Update handleAssignClick to store the exam
+    const handleAssignClick = (exam) => {
+      setCurrentExam(exam); // Store the exam being assigned
+      setSelectedStudents([]); // Clear previous selections
+      setShowAssignModal(true); // Show the modal
+    };
+
+    // Add mock student data
+    const mockStudents = [
+      { id: 1, name: "John Doe", username: "john_doe" },
+      { id: 2, name: "Jane Smith", username: "jane_smith" },
+      { id: 3, name: "Bob Wilson", username: "bob_wilson" }
+    ];
+
+    // Add state for assignment modal
+    const [showAssignModal, setShowAssignModal] = useState(false);
+    const [selectedStudents, setSelectedStudents] = useState([]);
+
+    // Update handleAssignExam to use currentExam
+    const handleAssignExam = () => {
+      if (!currentExam) return;
+      if (selectedStudents.length === 0) {
+        alert('Please select at least one student');
+        return;
+      }
+
+      // Get existing assignments or initialize empty object
+      const assignments = JSON.parse(localStorage.getItem('examAssignments') || '{}');
+      
+      // Add new assignment
+      assignments[currentExam.exam_id] = {
+        students: selectedStudents,
+        assignedDate: new Date().toISOString()
+      };
+
+      // Save back to localStorage
+      localStorage.setItem('examAssignments', JSON.stringify(assignments));
+      
+      // Clear selections and close modal
+      setSelectedStudents([]);
+      setCurrentExam(null);
+      setShowAssignModal(false);
+      alert('Exam assigned successfully!');
+    };
+
+    // Add a function to handle question field changes
+    const handleQuestionChange = (questionIndex, field, value) => {
+      setFormData(prev => {
+        const updatedQuestions = [...prev.questions];
+        updatedQuestions[questionIndex] = {
+          ...updatedQuestions[questionIndex],
+          [field]: value
+        };
+        return {
+          ...prev,
+          questions: updatedQuestions
+        };
+      });
+    };
+
+    // Add state for showing answers
+    const [showAnswers, setShowAnswers] = useState(null);
+
   return (
     <div className={styles.main}>
       <div className={styles.sidebarContainer}>
@@ -221,19 +289,6 @@ function CreatePage() {
               </div>
 
               <div className={styles.formGroup}>
-                {/* <label>Module:</label>
-                <select
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className={styles.selectInput}
-                >
-                  <option value="" disabled>Select a Module</option>
-                  <option value="Reading and Writing">Reading & Writing</option>
-                  <option value="Math">Math</option>
-                </select> */}
-              </div>
-
-              <div className={styles.formGroup}>
                 <label>Duration:</label>
                 <input
                   type="text"
@@ -244,19 +299,7 @@ function CreatePage() {
                 />
               </div>
 
-                {/* <label>Section:</label>
-                <select
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className={styles.selectInput}
-                >
-                  <option value="" disabled>Select a Module</option>
-                  <option value="Reading and Writing">Reading & Writing</option>
-                  <option value="Math">Math</option>
-                </select> */}
-              
-
-              <button className={styles.submitButton}type="submit">Create Exam</button>
+              <button className={styles.submitButton} type="submit">Create Exam</button>
             </form>
           </div>
           <div className={styles.twrapper}>
@@ -268,6 +311,7 @@ function CreatePage() {
                   <th>Title</th>
                   <th>Created</th>
                   <th>Duration</th>
+                  <th>Answers</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -280,9 +324,39 @@ function CreatePage() {
                       </td>
                       <td>{exam.exam_id}</td>
                       <td>{exam.title}</td>
-                   
                       <td>{exam.created_at}</td>
                       <td>{exam.duration}</td>
+                      <td className={styles.answersColumn}>
+                        <button 
+                          className={styles.viewAnswersBtn}
+                          onClick={() => setShowAnswers(exam.exam_id)}
+                        >
+                          View Answers
+                        </button>
+                        {showAnswers === exam.exam_id && (
+                          <div className={styles.answersPopup}>
+                            <div className={styles.answersContent}>
+                              <h3>Correct Answers</h3>
+                              <div className={styles.answersList}>
+                                {exam.questions?.map((question, index) => (
+                                  <div key={index} className={styles.answerItem}>
+                                    {index + 1}. {question.correct_answer}
+                                  </div>
+                                ))}
+                              </div>
+                              <button 
+                                className={styles.closeAnswersBtn}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setShowAnswers(null);
+                                }}
+                              >
+                                ×
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </td>
                       <td className={styles.actionButtons}>
                         <button 
                           className={`${styles.actionBtn} ${styles.editBtn}`}
@@ -298,33 +372,30 @@ function CreatePage() {
                         </button>
                         <button 
                           className={`${styles.actionBtn} ${styles.assignBtn}`}
-                          onClick={() => handleAssign(exam.exam_id)}
+                          onClick={() => handleAssignClick(exam)}
                         >
                           Assign
                         </button>
-
-                      <div>
-                        <AlertDialog>
-                          <AlertDialogTrigger className={`${styles.actionBtn} ${styles.deleteBtn}`}>
-                            Delete
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                              <AlertDialogDescription>
-                                This action cannot be undone. This will permanently delete your exam
-                                and remove its data from our servers.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction className={styles.deleteBtn}>Delete</AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      </div>
-
-
+                        <div>
+                          <AlertDialog>
+                            <AlertDialogTrigger className={`${styles.actionBtn} ${styles.deleteBtn}`}>
+                              Delete
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  This action cannot be undone. This will permanently delete your exam
+                                  and remove its data from our servers.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction className={styles.deleteBtn}>Delete</AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
                       </td>
                     </tr>
                   ))
@@ -369,6 +440,52 @@ function CreatePage() {
           </div>
         </div>
       </div>
+
+      {/* Add the modal */}
+      {showAssignModal && (
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <h2>Assign Exam: {currentExam?.title}</h2>
+            <div className={styles.studentList}>
+              {mockStudents.map(student => (
+                <label key={student.id} className={styles.studentItem}>
+                  <input
+                    type="checkbox"
+                    checked={selectedStudents.includes(student.id)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedStudents(prev => [...prev, student.id]);
+                      } else {
+                        setSelectedStudents(prev => 
+                          prev.filter(id => id !== student.id)
+                        );
+                      }
+                    }}
+                  />
+                  {student.name} ({student.username})
+                </label>
+              ))}
+            </div>
+            <div className={styles.modalButtons}>
+              <button 
+                className={styles.assignButton}
+                onClick={() => {
+                  handleAssignExam();
+                  setShowAssignModal(false);
+                }}
+              >
+                Assign
+              </button>
+              <button 
+                className={styles.cancelButton}
+                onClick={() => setShowAssignModal(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

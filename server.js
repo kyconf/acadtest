@@ -538,6 +538,30 @@ async function createExam(title, description, duration) { //get specific user by
   return result;
 }
 
+// Add exam assignment endpoint
+app.post('/assign-exam', async (req, res) => {
+  try {
+    const { examId, studentIds } = req.body;
+    
+    // Validate input
+    if (!examId || !studentIds || !Array.isArray(studentIds) || studentIds.length === 0) {
+      return res.status(400).json({ message: 'Invalid input' });
+    }
+
+    // Insert assignments one by one to handle errors better
+    for (const studentId of studentIds) {
+      await db.query(`
+        INSERT INTO exam_assignments (exam_id, student_id) 
+        VALUES (?, ?)
+      `, [examId, studentId]);
+    }
+
+    res.json({ message: 'Exam assigned successfully' });
+  } catch (error) {
+    console.error('Error assigning exam:', error);
+    res.status(500).json({ message: 'Failed to assign exam: ' + error.message });
+  }
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

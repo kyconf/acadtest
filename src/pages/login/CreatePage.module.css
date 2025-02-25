@@ -471,13 +471,17 @@ td {
 }
 
 .assignBtn {
-  background-color: #eaeaea;
-  color: rgb(18, 17, 17);
+  background-color: #52c41a;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
 }
 
 .assignBtn:hover {
-  background-color: #059669;
-  color: white;
+  background-color: #73d13d;
 }
 
 .deleteBtn {
@@ -677,4 +681,136 @@ td {
 
 .breadcrumbContainer {
   margin-bottom: 1rem;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+}
+
+.studentList {
+  margin: 1rem 0;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.studentItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.modalButtons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.correctAnswerField {
+  margin: 1rem 0;
+}
+
+.correctAnswerField label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.correctAnswerField select {
+  width: 200px;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.questionSection {
+  border: 1px solid #eee;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 4px;
+}
+
+.answersColumn {
+  position: relative;
+}
+
+.viewAnswersBtn {
+  padding: 4px 12px;
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.viewAnswersBtn:hover {
+  background: #e0e0e0;
+}
+
+.answersPopup {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  min-width: 200px;
+}
+
+.answersContent {
+  padding: 1rem;
+  position: relative;
+}
+
+.answersContent h3 {
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.answersList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.answerItem {
+  font-family: monospace;
+  padding: 0.25rem 0;
+}
+
+.closeAnswersBtn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #666;
+}
+
+.closeAnswersBtn:hover {
+  color: #333;
 }

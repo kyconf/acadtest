@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import styles from './Sidebar.module.css'
 import logo1 from '../assets/logo1.png'
+import { Link } from 'react-router-dom';
 
 
 function LoginBox() {
@@ -166,6 +167,10 @@ m149 -297 c47 -17 1938 -1112 1938 -1122 -1 -4 -1163 -681 -1745 -1016 -208
 
         Student List
       </button>
+
+      <Link to="/teacher/submissions" className={styles.sidebarLink}>
+        Student Submissions
+      </Link>
 
       {/* <button className={`${styles.button} ${
           location.pathname === '/admin' ? styles.clicked : ''

@@ -15,6 +15,9 @@ import AnnouncePage from './pages/login/AnnouncePage.jsx';
 import ExamEdit from './pages/exam/ExamEdit.jsx';
 import Timer from './pages/exam/Timer.jsx';
 import CalendarComponent from './components/CalendarComponent.jsx'
+import StudentExam from './pages/exam/StudentExam.jsx';
+import StudentDashboard from './pages/student/StudentDashboard';
+import SubmissionsPage from './pages/teacher/SubmissionsPage.jsx';
 // This is the first page, aka the login page
 // to run app do npm run dev
 
@@ -96,6 +99,18 @@ function App() {
     {
       path: "/calendar",
       element: <CalendarComponent />
+    },
+    {
+      path: "/student/exam/:examId",
+      element: <StudentExam />
+    },
+    {
+      path: "/student/dashboard",
+      element: <StudentDashboard />
+    },
+    {
+      path: "/teacher/submissions",
+      element: <SubmissionsPage />
     }
   ]);
 

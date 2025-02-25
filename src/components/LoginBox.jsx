@@ -35,11 +35,14 @@ function LoginBox() {
         body: JSON.stringify(formData),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
-        const data = await response.json();
-        // Handle successful login
-        if (data.message === 'Login successful') {
-          navigate('/dashboard');
+        // Check username to determine if student
+        if (formData.username === 'john_doe' || formData.username === 'jane_doe') {
+          navigate('/student/dashboard'); // Redirect to student dashboard
+        } else {
+          navigate('/dashboard'); // Teacher dashboard
         }
       } else {
         const errorData = await response.json();

@@ -178,20 +178,59 @@ function ExamEdit() {
                         {module.questions.map((question, questionIndex) => (
                           <div key={questionIndex} className={styles.questionItem}>
                             <span>Question {questionIndex + 1}:</span>
-                            <ReactQuill
-                              theme="snow"
-                              value={question.text}
-                              onChange={(content) => handleQuestionChange(sectionIndex, moduleIndex, questionIndex, 'text', content)}
-                              modules={modules}
-                              formats={formats}
-                              className={styles.editor}
-                            />
-                            <input
-                              type="text"
-                              placeholder="Correct answer"
-                              value={question.answer || ''}
-                              onChange={(e) => handleQuestionChange(sectionIndex, moduleIndex, questionIndex, 'answer', e.target.value)}
-                            />
+                            <div className={styles.questionForm}>
+                              <div className={styles.formGroup}>
+                                <label>Question Passage:</label>
+                                <textarea
+                                  value={question.question_passage}
+                                  onChange={(e) => handleQuestionChange(sectionIndex, moduleIndex, questionIndex, 'question_passage', e.target.value)}
+                                  className={styles.textArea}
+                                  placeholder="Enter question passage"
+                                />
+                              </div>
+
+                              <div className={styles.formGroup}>
+                                <label>Question Prompt:</label>
+                                <input
+                                  type="text"
+                                  value={question.question_prompt}
+                                  onChange={(e) => handleQuestionChange(sectionIndex, moduleIndex, questionIndex, 'question_prompt', e.target.value)}
+                                  className={styles.textInput}
+                                  placeholder="Enter question prompt"
+                                />
+                              </div>
+
+                              {/* Choice inputs */}
+                              {['A', 'B', 'C', 'D'].map((choice) => (
+                                <div key={choice} className={styles.formGroup}>
+                                  <label>Choice {choice}:</label>
+                                  <input
+                                    type="text"
+                                    value={question[`question_choice_${choice}`]}
+                                    onChange={(e) => handleQuestionChange(sectionIndex, moduleIndex, questionIndex, `question_choice_${choice}`, e.target.value)}
+                                    className={styles.textInput}
+                                    placeholder={`Enter choice ${choice}`}
+                                  />
+                                </div>
+                              ))}
+
+                              {/* Add correct answer selector */}
+                              <div className={styles.formGroup}>
+                                <label>Correct Answer:</label>
+                                <select
+                                  value={question.correct_answer || ''}
+                                  onChange={(e) => handleQuestionChange(sectionIndex, moduleIndex, questionIndex, 'correct_answer', e.target.value)}
+                                  className={styles.selectInput}
+                                  required
+                                >
+                                  <option value="">Select correct answer</option>
+                                  <option value="A">A</option>
+                                  <option value="B">B</option>
+                                  <option value="C">C</option>
+                                  <option value="D">D</option>
+                                </select>
+                              </div>
+                            </div>
                             <button onClick={() => handleSaveQuestion(sectionIndex, moduleIndex, questionIndex)}>Save Changes</button>
                             <button onClick={() => handleDeleteQuestion(sectionIndex, moduleIndex, questionIndex)}>Delete</button>
                           </div>
