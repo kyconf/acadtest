@@ -161,8 +161,8 @@ function ExamEditor() {
     try {
       // Create a new empty question with the next number and required foreign keys
       const newQuestion = {
-        section: '1',  // Default to section 1
-        module: '1',   // Default to module 1
+        section_id: '1',  // Default to section 1
+        module_id: '1',   // Default to module 1
         number: preview.length + 1,
         prompt: '',
         passage: '',
