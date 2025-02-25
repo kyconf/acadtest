@@ -457,7 +457,7 @@ async function updateExam(
     const [result] = await connection.execute(
       `
       INSERT INTO questions (
-        section, module_id, number, passage, prompt,
+        section_id, module_id, number, passage, prompt,
         choice_A, choice_B, choice_C, choice_D, correct_answer
       )
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
