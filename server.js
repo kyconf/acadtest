@@ -653,33 +653,6 @@ app.get('/students', async (req, res) => {
   }
 });
 
-// Add this function to get assigned exams for a student
-async function getAssignedExams(studentId) {
-  try {
-    const [rows] = await db.execute(`
-      SELECT exam_id 
-      FROM exams 
-      WHERE assigned_to = ?
-    `, [studentId]);
-    return rows.map(row => row.exam_id);
-  } catch (error) {
-    console.error('Error getting assigned exams:', error);
-    throw error;
-  }
-}
-
-// Add a new endpoint to get assigned exams
-app.get('/assigned-exams/:studentId', async (req, res) => {
-  try {
-    const { studentId } = req.params;
-    const assignedExams = await getAssignedExams(studentId);
-    res.json(assignedExams);
-  } catch (error) {
-    console.error('Error fetching assigned exams:', error);
-    res.status(500).json({ message: 'Failed to fetch assigned exams' });
-  }
-});
-
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

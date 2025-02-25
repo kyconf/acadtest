@@ -50,199 +50,222 @@ function CreatePage() {
   // Calculate total pages
   const totalPages = Math.ceil(exams.length / examsPerPage);
 
-  const [students, setStudents] = useState([]);
-  const [selectedExam, setSelectedExam] = useState(null);
-  const [selectedStudents, setSelectedStudents] = useState([]);
-  const [assignedExams, setAssignedExams] = useState({});
-
   useEffect(() => {
-    // Fetch students and exams
-    const fetchData = async () => {
+    async function fetchExams() {
       try {
-        const [studentsRes, examsRes] = await Promise.all([
-          fetch(`${API_URL}/students`),
-          fetch(`${API_URL}/exams`)
-        ]);
-        
-        const studentsData = await studentsRes.json();
-        const examsData = await examsRes.json();
-        
-        setStudents(studentsData);
-        setExams(examsData);
-
-        // Fetch assigned exams for each student
-        const assignedData = {};
-        await Promise.all(studentsData.map(async (student) => {
-          const response = await fetch(`${API_URL}/assigned-exams/${student.id}`);
-          const assignedExams = await response.json();
-          assignedData[student.id] = assignedExams;
-        }));
-        setAssignedExams(assignedData);
-      } catch (error) {
-        console.error('Error fetching data:', error);
+        const response = await fetch(`${API_URL}/exams`); // Fetch data from the backend 3000 login
+        if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`); // Handle HTTP errors
+        }
+        const data = await response.json(); // Parse the JSON response
+        setExams(data); // Update state with the fetched data
+      } catch (err) {
+        setError(err.message); // Update error state if there's an issue
       }
-    };
+    }
 
-    fetchData();
-  }, []);
+    fetchExams();
+  }, []); // Empty dependency array to fetch data on component mount
 
-  const handleExamClick = (exam) => {
-    setSelectedExam(exam);
-    // Pre-select students who are already assigned to this exam
-    const preSelectedStudents = students
-      .filter(student => assignedExams[student.id]?.includes(exam.exam_id))
-      .map(student => student.id);
-    setSelectedStudents(preSelectedStudents);
-  };
+  if (error) {
+    return <p>Error fetching users: {error}</p>; // Display error if it occurs
+  }
+
+
+
 
   // State for form data
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    duration: 0
-  });
-
-  // State for displaying success or error messages
-  const [message, setMessage] = useState('');
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
+    const [formData, setFormData] = useState({
+      title: '',
+      description: '',
+      duration: 0
     });
-  };
-
-  // Add state for alert message
-  const [alert, setAlert] = useState({ show: false, message: '', type: '' });
-
-  // Add function to fetch exams
-  const fetchExams = async () => {
-    try {
-      const response = await fetch(`${API_URL}/exams`);
-      if (response.ok) {
-        const data = await response.json();
-        setExams(data);
-      }
-    } catch (error) {
-      console.error('Error fetching exams:', error);
-    }
-  };
-
-  // Use useEffect to fetch exams on component mount
-  useEffect(() => {
-    fetchExams();
-  }, []);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // Add this to prevent form default submission
-
-    try {
-      const response = await fetch(`${API_URL}/exams`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+  
+    // State for displaying success or error messages
+    const [message, setMessage] = useState('');
+  
+    const handleChange = (e) => {
+      const { name, value } = e.target;
+      setFormData({
+        ...formData,
+        [name]: value,
       });
+    };
+  
+    // Add state for alert message
+    const [alert, setAlert] = useState({ show: false, message: '', type: '' });
+  
+    // Add function to fetch exams
+    const fetchExams = async () => {
+      try {
+        const response = await fetch(`${API_URL}/exams`);
+        if (response.ok) {
+          const data = await response.json();
+          setExams(data);
+        }
+      } catch (error) {
+        console.error('Error fetching exams:', error);
+      }
+    };
+  
+    // Use useEffect to fetch exams on component mount
+    useEffect(() => {
+      fetchExams();
+    }, []);
+  
+    const handleSubmit = async (e) => {
+      e.preventDefault(); // Add this to prevent form default submission
 
-      if (response.ok) {
-        // Show success message
+      try {
+        const response = await fetch(`${API_URL}/exams`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+  
+        if (response.ok) {
+          // Show success message
+          setAlert({
+            show: true,
+            message: 'Exam created successfully!',
+            type: 'success'
+          });
+  
+          // Clear form
+          setFormData({
+            title: '',
+            description: '',
+            duration: 0
+          });
+  
+          // Fetch updated exams list
+          fetchExams();
+  
+          // Hide alert after 3 seconds
+          setTimeout(() => {
+            setAlert({ show: false, message: '', type: '' });
+          }, 3000);
+  
+        } else {
+          const errorData = await response.json();
+          setAlert({
+            show: true,
+            message: `Error: ${errorData.message}`,
+            type: 'error'
+          });
+        }
+      } catch (error) {
         setAlert({
           show: true,
-          message: 'Exam created successfully!',
-          type: 'success'
-        });
-
-        // Clear form
-        setFormData({
-          title: '',
-          description: '',
-          duration: 0
-        });
-
-        // Fetch updated exams list
-        fetchExams();
-
-        // Hide alert after 3 seconds
-        setTimeout(() => {
-          setAlert({ show: false, message: '', type: '' });
-        }, 3000);
-
-      } else {
-        const errorData = await response.json();
-        setAlert({
-          show: true,
-          message: `Error: ${errorData.message}`,
+          message: 'An unexpected error occurred.',
           type: 'error'
         });
       }
-    } catch (error) {
-      setAlert({
-        show: true,
-        message: 'An unexpected error occurred.',
-        type: 'error'
-      });
-    }
-  };
-
-  const handleEdit = (examId) => {
-    navigate(`/edit-exam/${examId}`);  // This will navigate to the editor page
-  };
-
-  const handlePreview = (examId) => {
-    navigate(`/preview-exam/${examId}`); // Navigate to the preview page
-
-  };
-
-  const handleDelete = (examId) => {
-
-  };
-
-  const [selectedUsers, setSelectedUsers] = useState([]);
-
-  // Add this function to handle assignment
-  const handleAssign = () => {
-    if (selectedStudents.length === 0) {
-      alert('Please select at least one student');
-      return;
-    }
-
-    // Get existing assignments or initialize empty object
-    const assignments = JSON.parse(localStorage.getItem('examAssignments') || '{}');
-    
-    // Add new assignment
-    assignments[selectedExam.exam_id] = {
-      students: selectedStudents,
-      assignedDate: new Date().toISOString()
+    };
+  
+    const handleEdit = (examId) => {
+      navigate(`/edit-exam/${examId}`);  // This will navigate to the editor page
     };
 
-    // Save back to localStorage
-    localStorage.setItem('examAssignments', JSON.stringify(assignments));
-    
-    // Clear selections and close modal
-    setSelectedStudents([]);
-    setSelectedExam(null);
-    alert('Exam assigned successfully!');
-  };
+    const handlePreview = (examId) => {
+      navigate(`/preview-exam/${examId}`); // Navigate to the preview page
 
-  // Add a function to handle question field changes
-  const handleQuestionChange = (questionIndex, field, value) => {
-    setFormData(prev => {
-      const updatedQuestions = [...prev.questions];
-      updatedQuestions[questionIndex] = {
-        ...updatedQuestions[questionIndex],
-        [field]: value
-      };
-      return {
-        ...prev,
-        questions: updatedQuestions
-      };
-    });
-  };
+    };
 
-  // Add state for showing answers
-  const [showAnswers, setShowAnswers] = useState(null);
+    const handleDelete = (examId) => {
+
+    };
+
+    const [selectedUsers, setSelectedUsers] = useState([]);
+
+    // Add this state for tracking students and selections
+    const [students, setStudents] = useState([]);
+    const [selectedStudents, setSelectedStudents] = useState([]);
+    const [currentExam, setCurrentExam] = useState(null);
+
+    // Add this function to fetch students
+    const fetchStudents = async () => {
+      try {
+        const response = await fetch(`${API_URL}/students`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch students');
+        }
+        const data = await response.json();
+        console.log('Fetched students:', data); // For debugging
+        setStudents(data);
+      } catch (error) {
+        console.error('Error fetching students:', error);
+      }
+    };
+
+    // Update your handleAssignClick function
+    const handleAssignClick = (exam) => {
+      setCurrentExam(exam);
+      setSelectedStudents([]); // Reset selections
+      fetchStudents(); // Fetch students when modal opens
+      setShowAssignModal(true);
+    };
+
+    // Add the student selection handler
+    const handleStudentSelection = (studentId) => {
+      setSelectedStudents(prev => {
+        if (prev.includes(studentId)) {
+          return prev.filter(id => id !== studentId);
+        } else {
+          return [...prev, studentId];
+        }
+      });
+    };
+
+    // Add state for assignment modal
+    const [showAssignModal, setShowAssignModal] = useState(false);
+
+    // Update handleAssignExam to use currentExam
+    const handleAssignExam = () => {
+      if (!currentExam) return;
+      if (selectedStudents.length === 0) {
+        alert('Please select at least one student');
+        return;
+      }
+
+      // Get existing assignments or initialize empty object
+      const assignments = JSON.parse(localStorage.getItem('examAssignments') || '{}');
+      
+      // Add new assignment
+      assignments[currentExam.exam_id] = {
+        students: selectedStudents,
+        assignedDate: new Date().toISOString()
+      };
+
+      // Save back to localStorage
+      localStorage.setItem('examAssignments', JSON.stringify(assignments));
+      
+      // Clear selections and close modal
+      setSelectedStudents([]);
+      setCurrentExam(null);
+      setShowAssignModal(false);
+      alert('Exam assigned successfully!');
+    };
+
+    // Add a function to handle question field changes
+    const handleQuestionChange = (questionIndex, field, value) => {
+      setFormData(prev => {
+        const updatedQuestions = [...prev.questions];
+        updatedQuestions[questionIndex] = {
+          ...updatedQuestions[questionIndex],
+          [field]: value
+        };
+        return {
+          ...prev,
+          questions: updatedQuestions
+        };
+      });
+    };
+
+    // Add state for showing answers
+    const [showAnswers, setShowAnswers] = useState(null);
 
   return (
     <div className={styles.main}>
@@ -370,7 +393,7 @@ function CreatePage() {
                         </button>
                         <button 
                           className={`${styles.actionBtn} ${styles.assignBtn}`}
-                          onClick={() => handleExamClick(exam)}
+                          onClick={() => handleAssignClick(exam)}
                         >
                           Assign
                         </button>
@@ -440,28 +463,40 @@ function CreatePage() {
       </div>
 
       {/* Add the modal */}
-      {selectedExam && (
+      {showAssignModal && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>
-            <h2>Assign Exam: {selectedExam.title}</h2>
+            <h2>Assign Exam: {currentExam?.title}</h2>
             <div className={styles.studentList}>
-              {students.map((student) => (
-                <div key={student.id} className={styles.studentItem}>
-                  <input
-                    type="checkbox"
-                    checked={selectedStudents.includes(student.id)}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setSelectedStudents([...selectedStudents, student.id]);
-                      } else {
-                        setSelectedStudents(selectedStudents.filter(id => id !== student.id));
-                      }
-                    }}
-                  />
-                  <span>{student.username} - {student.email}</span>
-                </div>
-              ))}
-              <button onClick={handleAssign}>Assign</button>
+              {students.length > 0 ? (
+                students.map((student) => (
+                  <label key={student.id} className={styles.studentItem}>
+                    <input
+                      type="checkbox"
+                      checked={selectedStudents.includes(student.id)}
+                      onChange={() => handleStudentSelection(student.id)}
+                    />
+                    <span>{student.username} - {student.email}</span>
+                  </label>
+                ))
+              ) : (
+                <p>Loading students...</p>
+              )}
+            </div>
+            <div className={styles.modalActions}>
+              <button 
+                onClick={() => handleAssignExam()} 
+                className={styles.assignButton}
+                disabled={selectedStudents.length === 0}
+              >
+                Assign
+              </button>
+              <button 
+                onClick={() => setShowAssignModal(false)} 
+                className={styles.cancelButton}
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>
