@@ -166,10 +166,10 @@ app.post('/a-register', async (req, res) =>  {
 
 
 app.put('/preview-exams/:examId', async (req, res) =>  {
-  const { section, module, number, prompt, passage, choice_A, choice_B, choice_C, choice_D, correct_answer } = req.body;
+  const { section_id, module_id, number, prompt, passage, choice_A, choice_B, choice_C, choice_D, correct_answer } = req.body;
   const { examId } = req.params;
   try {
-      const result = await updateExam(examId, section, module, number, prompt, passage, choice_A, choice_B, choice_C, choice_D, correct_answer);
+      const result = await updateExam(examId, section_id, module_id, number, prompt, passage, choice_A, choice_B, choice_C, choice_D, correct_answer);
       res.status(201).json({ message: 'Exam updated successfully', result });
   } catch (error) {
       console.error('Error registering user:', error);
