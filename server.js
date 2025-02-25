@@ -457,7 +457,7 @@ async function updateExam(
     const [result] = await connection.execute(
       `
       INSERT INTO questions (
-        section, module, number, passage, prompt,
+        section, module_id, number, passage, prompt,
         choice_A, choice_B, choice_C, choice_D, correct_answer
       )
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -538,7 +538,7 @@ async function createExam(title, description, duration) {
 
     // Insert empty question
     await connection.execute(
-      `INSERT INTO questions (section, module, number, passage, prompt, choice_A, choice_B, choice_C, choice_D, correct_answer)
+      `INSERT INTO questions (section_id, module_id, number, passage, prompt, choice_A, choice_B, choice_C, choice_D, correct_answer)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [sectionId, moduleId, 1, '', '', '', '', '', '', '']
     );
