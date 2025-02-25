@@ -169,13 +169,12 @@ app.put('/preview-exams/:examId', async (req, res) =>  {
   const { section_id, module_id, number, prompt, passage, choice_A, choice_B, choice_C, choice_D, correct_answer } = req.body;
   const { examId } = req.params;
   try {
-      const result = await updateExam(examId, section_id, module_id, number, prompt, passage, choice_A, choice_B, choice_C, choice_D, correct_answer);
-      res.status(201).json({ message: 'Exam updated successfully', result });
+    const result = await updateExam(examId, section_id, module_id, number, prompt, passage, choice_A, choice_B, choice_C, choice_D, correct_answer);
+    res.status(201).json({ message: 'Exam updated successfully', result });
   } catch (error) {
-      console.error('Error registering user:', error);
-      res.status(500).json({ message: 'Error registering user: An account already exists with those credentials', error });
+    console.error('Error updating exam:', error);
+    res.status(500).json({ message: 'Error updating exam', error });
   }
-  
 });
 
 

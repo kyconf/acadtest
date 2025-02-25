@@ -175,16 +175,16 @@ function ExamEditor() {
 
   const handleSave = async () => {
     const currentData = {
-      section: preview[currentQuestion]?.section_id || examData.section_id,
-      module: preview[currentQuestion]?.module_id || examData.module_id,
-      number: preview[currentQuestion]?.question_number || examData.question_number,
-      prompt: preview[currentQuestion]?.question_prompt || examData.question_prompt,
-      passage: preview[currentQuestion]?.question_passage || examData.question_passage,
-      choice_A: preview[currentQuestion]?.question_choice_A || examData.question_choice_A,
-      choice_B: preview[currentQuestion]?.question_choice_B || examData.question_choice_B,
-      choice_C: preview[currentQuestion]?.question_choice_C || examData.question_choice_C,
-      choice_D: preview[currentQuestion]?.question_choice_D || examData.question_choice_D,
-      correct_answer: preview[currentQuestion]?.correct_answer || examData.correct_answer,
+      section_id: currentQ.section_id,
+      module_id: currentQ.module_id,
+      number: currentQ.question_number,
+      prompt: currentQ.question_prompt || examData.question_prompt,
+      passage: currentQ.question_passage || examData.question_passage,
+      choice_A: currentQ.question_choice_A || examData.question_choice_A,
+      choice_B: currentQ.question_choice_B || examData.question_choice_B,
+      choice_C: currentQ.question_choice_C || examData.question_choice_C,
+      choice_D: currentQ.question_choice_D || examData.question_choice_D,
+      correct_answer: currentQ.correct_answer || examData.correct_answer,
     };
 
     try {
@@ -252,6 +252,13 @@ function ExamEditor() {
   };
 
   const currentQ = preview[currentQuestion];
+
+  // Add this helper function to get the current question number within the filtered set
+  const getCurrentQuestionNumber = () => {
+    const filteredQuestions = getFilteredQuestions();
+    const currentIndex = filteredQuestions.findIndex(q => q.question_number === currentQ.question_number);
+    return currentIndex + 1; // Add 1 since we want to display 1-based numbering
+  };
 
   return (
     
@@ -321,7 +328,7 @@ function ExamEditor() {
         
         <div className={styles.questionArea}>
           <div className={styles.questionHeader}>
-            <div className={styles.questionNumber}>{currentQ[`question_number`]}</div>
+            <div className={styles.questionNumber}>{getCurrentQuestionNumber()}</div>
             <button 
               className={`${styles.reviewButton} ${isMarkedForReview ? styles.marked : ''}`}
               onClick={() => setIsMarkedForReview(!isMarkedForReview)}
