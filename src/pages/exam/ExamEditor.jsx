@@ -19,9 +19,9 @@ function ExamEditor() {
   const [editingModuleIndex, setEditingModuleIndex] = useState({});
 
   const [examData, setExamData] = useState({
-    section_id: '',
-    module_id: '',
-    module_name: '',
+    section_id: '1',
+    module_id: '1',
+    module_name: 'Reading and Writing',
     question_number: '',
     question_prompt: '',
     question_passage: '',
@@ -72,23 +72,45 @@ function ExamEditor() {
   };
 
   useEffect(() => {
-    fetchPreview();
+    const initializeExam = async () => {
+      await fetchPreview();
+      setCurrentQuestion(0); // Set to first question
+      handleChange('section_id', '1');
+      handleChange('module_id', '1');
+    };
+    
+    initializeExam();
   }, [examId]);
 
   if (!preview || preview.length === 0) {
     return <p>Loading...</p>;
   }
 
+  const getFilteredQuestions = () => {
+    if (!preview) return [];
+    return preview.filter(question => 
+      question.section_id === currentQ.section_id && 
+      question.module_id === currentQ.module_id
+    );
+  };
+
   const handleNext = () => {
-    if (currentQuestion < preview.length - 1) {
-      setCurrentQuestion((prev) => prev + 1);
-      console.log("Success");
+    const filteredQuestions = getFilteredQuestions();
+    const currentIndex = filteredQuestions.findIndex(q => q.question_number === currentQ.question_number);
+    if (currentIndex < filteredQuestions.length - 1) {
+      const nextQuestion = filteredQuestions[currentIndex + 1];
+      const nextIndex = preview.findIndex(q => q.question_number === nextQuestion.question_number);
+      setCurrentQuestion(nextIndex);
     }
   };
 
   const handlePrevious = () => {
-    if (currentQuestion > 0) {
-      setCurrentQuestion((prev) => prev - 1);
+    const filteredQuestions = getFilteredQuestions();
+    const currentIndex = filteredQuestions.findIndex(q => q.question_number === currentQ.question_number);
+    if (currentIndex > 0) {
+      const prevQuestion = filteredQuestions[currentIndex - 1];
+      const prevIndex = preview.findIndex(q => q.question_number === prevQuestion.question_number);
+      setCurrentQuestion(prevIndex);
     }
   };
 
@@ -109,10 +131,37 @@ function ExamEditor() {
   };
 
   const handleSectionChange = (value) => {
-    // Reset module when section changes
+    // Don't reset module if staying in Section 1
+    if (value === currentQ.section_id) {
+      return;
+    }
+
     handleChange('section_id', value);
-    handleChange('module_id', '');
-    handleChange('module_name', '');
+    if (value === '1') {
+      handleChange('module_id', '1');
+    } else {
+      handleChange('module_id', '1');
+    }
+    
+    // Find first question in the new section
+    const questionsInSection = preview.filter(q => q.section_id === value);
+    if (questionsInSection.length > 0) {
+      const firstQuestionIndex = preview.findIndex(q => q.question_number === questionsInSection[0].question_number);
+      setCurrentQuestion(firstQuestionIndex);
+    }
+  };
+
+  const handleModuleChange = (value) => {
+    handleChange('module_id', value);
+    // Find first question in the new module
+    const questionsInModule = preview.filter(q => 
+      q.section_id === currentQ.section_id && 
+      q.module_id === value
+    );
+    if (questionsInModule.length > 0) {
+      const firstQuestionIndex = preview.findIndex(q => q.question_number === questionsInModule[0].question_number);
+      setCurrentQuestion(firstQuestionIndex);
+    }
   };
 
   const handleOptionSelect = (option) => {
@@ -159,11 +208,11 @@ function ExamEditor() {
 
   const handleInsertQuestion = async () => {
     try {
-      // Create a new empty question with the next number and required foreign keys
+      const filteredQuestions = getFilteredQuestions();
       const newQuestion = {
-        section_id: '1',  // Default to section 1
-        module_id: '1',   // Default to module 1
-        number: preview.length + 1,
+        section_id: currentQ.section_id,
+        module_id: currentQ.module_id,
+        number: filteredQuestions.length + 1,
         prompt: '',
         passage: '',
         choice_A: '',
@@ -182,11 +231,8 @@ function ExamEditor() {
       });
 
       if (response.ok) {
-        // Update the preview state and move to the new question
         setPreview(prev => [...prev, {
           ...newQuestion,
-          section_id: '1',
-          module_id: '1',
           question_number: newQuestion.number,
           question_prompt: '',
           question_passage: '',
@@ -215,32 +261,30 @@ function ExamEditor() {
         <div className={styles.sectionInfo}>
           <select
             className={styles.selectInput}
-            value={currentQ.section_id}
+            value={currentQ?.section_id || '1'}
             onChange={(e) => handleSectionChange(e.target.value)}
           >
-            <option value="">Select Section</option>
             <option value="1">Section 1</option>
             <option value="2">Section 2</option>
           </select>
 
           <select
             className={styles.selectInput}
-            value={currentQ.module_id}
-            onChange={(e) => handleChange('module_id', e.target.value)}
-            disabled={!currentQ.section_id}
+            value={currentQ?.module_id || '1'}
+            onChange={(e) => handleModuleChange(e.target.value)}
+            disabled={!currentQ?.section_id}
           >
-            <option value="">Select Module</option>
-            {currentQ.section_id === '1' ? (
-              <>
-                <option value="1">Module 1: Reading & Writing</option>
-                <option value="2">Module 2: Reading & Writing</option>
-              </>
-            ) : currentQ.section_id === '2' ? (
+            {currentQ?.section_id === '2' ? (
               <>
                 <option value="1">Module 1: Math</option>
                 <option value="2">Module 2: Math</option>
               </>
-            ) : null}
+            ) : (
+              <>
+                <option value="1">Module 1: Reading & Writing</option>
+                <option value="2">Module 2: Reading & Writing</option>
+              </>
+            )}
           </select>
 
           <button 
@@ -324,19 +368,19 @@ function ExamEditor() {
         <div className={styles.userInfo}>Exam Editor Mode</div>
         <div className={styles.questionNav}>
           <button 
-            className={styles.navButton} 
+            className={styles.navButton}
             onClick={handlePrevious}
-            disabled={currentQuestion === 0}
+            disabled={getFilteredQuestions().findIndex(q => q.question_number === currentQ.question_number) === 0}
           >
             Previous
           </button>
-          Question {currentQ[`question_number`]} of 3
+          Question {currentQ.question_number} of {getFilteredQuestions().length}
           <button onClick={handleSave}>Save Changes</button>
       
           <button 
-            className={styles.navButton} 
+            className={styles.navButton}
             onClick={handleNext}
-            disabled={currentQuestion === preview.length - 1}
+            disabled={getFilteredQuestions().findIndex(q => q.question_number === currentQ.question_number) === getFilteredQuestions().length - 1}
           >
             Next
           </button>

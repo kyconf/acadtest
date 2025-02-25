@@ -346,6 +346,8 @@ db.on('error', function(err) {
       WHERE 
         exams.exam_id = ?
       ORDER BY
+        sections.number ASC,
+        modules.number ASC,
         questions.number ASC
     `, [examId]);
 
@@ -520,28 +522,63 @@ async function createExam(title, description, duration) {
     );
     const examId = examResult.insertId;
 
-    // Insert default section
-    const [sectionResult] = await connection.execute(
+    // Insert Section 1
+    const [section1Result] = await connection.execute(
       `INSERT INTO sections (exam_id, number)
        VALUES (?, ?)`,
       [examId, 1]
     );
-    const sectionId = sectionResult.insertId;
+    const section1Id = section1Result.insertId;
 
-    // Insert default module
-    const [moduleResult] = await connection.execute(
+    // Insert Section 2
+    const [section2Result] = await connection.execute(
+      `INSERT INTO sections (exam_id, number)
+       VALUES (?, ?)`,
+      [examId, 2]
+    );
+    const section2Id = section2Result.insertId;
+
+    // Insert Section 1 Modules (Reading & Writing)
+    const [moduleResult1] = await connection.execute(
       `INSERT INTO modules (section_id, number, module_name)
        VALUES (?, ?, ?)`,
-      [sectionId, 1, 'Reading and Writing']
+      [section1Id, 1, 'Reading and Writing']
     );
-    const moduleId = moduleResult.insertId;
+    const moduleId1 = moduleResult1.insertId;
 
-    // Insert empty question
-    await connection.execute(
-      `INSERT INTO questions (section_id, module_id, number, passage, prompt, choice_A, choice_B, choice_C, choice_D, correct_answer)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [sectionId, moduleId, 1, '', '', '', '', '', '', '']
+    const [moduleResult2] = await connection.execute(
+      `INSERT INTO modules (section_id, number, module_name)
+       VALUES (?, ?, ?)`,
+      [section1Id, 2, 'Reading and Writing']
     );
+    const moduleId2 = moduleResult2.insertId;
+
+    // Insert Section 2 Modules (Math)
+    const [moduleResult3] = await connection.execute(
+      `INSERT INTO modules (section_id, number, module_name)
+       VALUES (?, ?, ?)`,
+      [section2Id, 1, 'Math']
+    );
+    const moduleId3 = moduleResult3.insertId;
+
+    const [moduleResult4] = await connection.execute(
+      `INSERT INTO modules (section_id, number, module_name)
+       VALUES (?, ?, ?)`,
+      [section2Id, 2, 'Math']
+    );
+    const moduleId4 = moduleResult4.insertId;
+
+    // Insert empty questions for all modules
+    const moduleIds = [moduleId1, moduleId2, moduleId3, moduleId4];
+    const sectionIds = [section1Id, section1Id, section2Id, section2Id];
+
+    for (let i = 0; i < moduleIds.length; i++) {
+      await connection.execute(
+        `INSERT INTO questions (section_id, module_id, number, passage, prompt, choice_A, choice_B, choice_C, choice_D, correct_answer)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [sectionIds[i], moduleIds[i], 1, '', '', '', '', '', '', '']
+      );
+    }
 
     await connection.commit();
     return examResult;

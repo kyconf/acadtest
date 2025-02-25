@@ -13,7 +13,7 @@ CREATE TABLE users (
   password VARCHAR(255) NOT NULL,
   created TIMESTAMP NOT NULL DEFAULT NOW(),
   email VARCHAR(255) UNIQUE NOT NULL,
-  name VARCHAR(255) NOT NULL
+  role VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE exams (
@@ -22,6 +22,7 @@ CREATE TABLE exams (
     description TEXT,
     assigned_to INT, 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    duration INT,
     FOREIGN KEY (assigned_to) REFERENCES users(id) ON DELETE CASCADE
 );
 
@@ -76,8 +77,7 @@ CREATE TABLE sections (
     FOREIGN KEY (exam_id) REFERENCES exams(exam_id) ON DELETE CASCADE 
 );
 
-INSERT INTO sections (exam_id, number) VALUES
-('1', '1');
+
 
 DESCRIBE exams;
 
@@ -92,40 +92,46 @@ CREATE TABLE modules (
 DESCRIBE modules;
 
 
-INSERT INTO modules (section_id, number, module_name) VALUES
-('1','1','Reading and Writing');
+
 
 CREATE TABLE questions (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    section VARCHAR(255) NOT NULL,
-    module INT, 
-    number INT,
+    section_id INT NOT NULL,  -- Foreign key for sections
+    module_id INT NOT NULL,   -- Foreign key for modules
+    number INT NOT NULL,      -- Question number within module
     passage TEXT,
-    prompt TEXT,
-    choice_A TEXT,
-    choice_B TEXT,
-    choice_C TEXT,
-    choice_D TEXT,
-    correct_answer CHAR(1), -- Correct answer (e.g., A, B, C, D)
-    FOREIGN KEY (module) REFERENCES modules(module_id) ON DELETE CASCADE,
-    UNIQUE KEY unique_question (number) -- Ensure uniqueness
+    prompt TEXT NOT NULL,
+    choice_A TEXT NOT NULL,
+    choice_B TEXT NOT NULL,
+    choice_C TEXT NOT NULL,
+    choice_D TEXT NOT NULL,
+    correct_answer CHAR(1) NOT NULL, -- Correct answer (A, B, C, D)
+    FOREIGN KEY (section_id) REFERENCES sections(section_id) ON DELETE CASCADE,
+    FOREIGN KEY (module_id) REFERENCES modules(module_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_question (section_id, module_id, number) -- Ensures unique questions per section and module
 );
+
 
 DESCRIBE questions;
 
-INSERT INTO users (username, password, email) VALUES
-('john_doe', 'password123', 'kyconf@gmail.com'),
-('jane_doe', 'password456', 'keycolinf@gmail.com'),
-('admin', 'adminpassword', 'kyconf@my.yorku.ca');
+INSERT INTO sections (exam_id, number) VALUES
+('1', '1');
+INSERT INTO modules (section_id, number, module_name) VALUES
+('1','1','Reading and Writing');
 
-INSERT INTO users (username, password, email, name) VALUES
-('administrator', 'admin', 'kyconf@yorku.ca', 'Kyle Fernandez');
+INSERT INTO users (username, password, email, role) VALUES
+('Student1', 'password123', 'kyconf@gmail.com', 'Student'),
+('Student2', 'password456', 'keycolinf@gmail.com', 'Student'),
+('Student3', 'password789', 'kyconf@my.yorku.ca', 'Student');
+
+INSERT INTO users (username, password, email, role) VALUES
+('admin', 'admin', 'kyconf@yorku.ca', 'Admin');
 
 
-INSERT INTO exams (title, description, assigned_to) VALUES
-('Math Exam', 'A basic mathematics exam covering algebra, geometry, and arithmetic.', 1),
-('Science Quiz', 'A short quiz testing knowledge of basic physics, chemistry, and biology.', 2),
-('History Test', 'A comprehensive test on world history, focusing on ancient civilizations.', 3);
+INSERT INTO exams (title, description, assigned_to, duration) VALUES
+('SAT Practice Test 1', 'A basic SAT exam covering reading, writing, and mathematics.', 1, 60),
+('Science Quiz', 'A short quiz testing knowledge of basic physics, chemistry, and biology.', 2, 60),
+('History Test', 'A comprehensive test on world history, focusing on ancient civilizations.', 3, 60);
 
 
 DELETE FROM questions;
@@ -133,7 +139,7 @@ DROP TABLE questions;
 SET SQL_SAFE_UPDATES = 0;
 SET SQL_SAFE_UPDATES = 1;
 
-INSERT INTO questions (section, module, number, passage, prompt, choice_A, choice_B, choice_C, choice_D, correct_answer)
+INSERT INTO questions (section_id, module_id, number, passage, prompt, choice_A, choice_B, choice_C, choice_D, correct_answer)
 VALUES
 (1, 1, 1, 
  'The sun provides energy essential for life on Earth. It is a vital component of photosynthesis, which allows plants to create oxygen and glucose.',
@@ -156,36 +162,15 @@ DESCRIBE questions;
 DESCRIBE users;
 SELECT * from exams;
 DESCRIBE exams;
-
+SELECT * from users;
 SELECT * from questions;
-
+SELECT * from exams;
 ALTER TABLE questions ADD UNIQUE KEY unique_question (section, module, number);
 
+DROP TABLE users;
+DROP TABLE exams;
+DROP TABLE sections;
+DROP TABLE modules;
+DROP table questions;
 
-
-CREATE TABLE user_answers (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    question_answer VARCHAR(255) NOT NULL,
-    module INT, 
-    number INT,
-    annotate TEXT,
-    journal TEXT,
-    choice_A TEXT,
-    choice_B TEXT,
-    choice_C TEXT,
-    choice_D TEXT,
-    correct_answer CHAR(1), -- Correct answer (e.g., A, B, C, D)
-    FOREIGN KEY (module) REFERENCES modules(module_id) ON DELETE CASCADE,
-    UNIQUE KEY unique_question (number) -- Ensure uniqueness
-);
-
-CREATE TABLE IF NOT EXISTS exam_assignments (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  exam_id INT NOT NULL,
-  student_id INT NOT NULL,
-  assigned_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (exam_id) REFERENCES exams(exam_id),
-  FOREIGN KEY (student_id) REFERENCES users(id),
-  UNIQUE KEY unique_assignment (exam_id, student_id) -- Prevent duplicate assignments
-);
-
+DELETE FROM exams WHERE exam_id = 4;
