@@ -18,6 +18,7 @@ import CalendarComponent from './components/CalendarComponent.jsx'
 import StudentExam from './pages/exam/StudentExam.jsx';
 import StudentDashboard from './pages/student/StudentDashboard';
 import SubmissionsPage from './pages/teacher/SubmissionsPage.jsx';
+import StudentAnnouncement from './pages/student/StudentAnnouncement.jsx';
 // This is the first page, aka the login page
 // to run app do npm run dev
 
@@ -111,6 +112,10 @@ function App() {
     {
       path: "/submissions",
       element: <SubmissionsPage />
+    },
+    {
+      path: "student/announcements",
+      element: <StudentAnnouncement />
     }
   ]);
 

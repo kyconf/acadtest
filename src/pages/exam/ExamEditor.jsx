@@ -18,16 +18,17 @@ function ExamEditor() {
   const [selectedOptions, setSelectedOptions] = useState({});
   const [editingModuleIndex, setEditingModuleIndex] = useState({});
 
-  const [examData, setExamData] = useState({ //you send the examdata here
-    section: '',
-    module: 0,
-    number: 0,
-    prompt: '',
-    passage: '',
-    choice_A: '',
-    choice_B: '',
-    choice_C: '',
-    choice_D: '',
+  const [examData, setExamData] = useState({
+    section_id: '',
+    module_id: '',
+    module_name: '',
+    question_number: '',
+    question_prompt: '',
+    question_passage: '',
+    question_choice_A: '',
+    question_choice_B: '',
+    question_choice_C: '',
+    question_choice_D: '',
     correct_answer: ''
   });
 
@@ -107,6 +108,12 @@ function ExamEditor() {
     );
   };
 
+  const handleSectionChange = (value) => {
+    // Reset module when section changes
+    handleChange('section_id', value);
+    handleChange('module_id', '');
+    handleChange('module_name', '');
+  };
 
   const handleOptionSelect = (option) => {
     setSelectedOptions(prev => ({
@@ -119,15 +126,15 @@ function ExamEditor() {
 
   const handleSave = async () => {
     const currentData = {
-      section: preview[currentQuestion]?.section_id || examData.section,
-      module: preview[currentQuestion]?.module_id || examData.module,
-      number: preview[currentQuestion]?.question_number || examData.number,
-      prompt: preview[currentQuestion]?.question_prompt || examData.prompt,
-      passage: preview[currentQuestion]?.question_passage || examData.passage,
-      choice_A: preview[currentQuestion]?.question_choice_A || examData.choice_A,
-      choice_B: preview[currentQuestion]?.question_choice_B || examData.choice_B,
-      choice_C: preview[currentQuestion]?.question_choice_C || examData.choice_C,
-      choice_D: preview[currentQuestion]?.question_choice_D || examData.choice_D,
+      section: preview[currentQuestion]?.section_id || examData.section_id,
+      module: preview[currentQuestion]?.module_id || examData.module_id,
+      number: preview[currentQuestion]?.question_number || examData.question_number,
+      prompt: preview[currentQuestion]?.question_prompt || examData.question_prompt,
+      passage: preview[currentQuestion]?.question_passage || examData.question_passage,
+      choice_A: preview[currentQuestion]?.question_choice_A || examData.question_choice_A,
+      choice_B: preview[currentQuestion]?.question_choice_B || examData.question_choice_B,
+      choice_C: preview[currentQuestion]?.question_choice_C || examData.question_choice_C,
+      choice_D: preview[currentQuestion]?.question_choice_D || examData.question_choice_D,
       correct_answer: preview[currentQuestion]?.correct_answer || examData.correct_answer,
     };
 
@@ -150,7 +157,53 @@ function ExamEditor() {
     }
   };
 
-  
+  const handleInsertQuestion = async () => {
+    try {
+      // Create a new empty question with the next number and required foreign keys
+      const newQuestion = {
+        section: '1',  // Default to section 1
+        module: '1',   // Default to module 1
+        number: preview.length + 1,
+        prompt: '',
+        passage: '',
+        choice_A: '',
+        choice_B: '',
+        choice_C: '',
+        choice_D: '',
+        correct_answer: ''
+      };
+
+      const response = await fetch(`${API_URL}/preview-exams/${examId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newQuestion),
+      });
+
+      if (response.ok) {
+        // Update the preview state and move to the new question
+        setPreview(prev => [...prev, {
+          ...newQuestion,
+          section_id: '1',
+          module_id: '1',
+          question_number: newQuestion.number,
+          question_prompt: '',
+          question_passage: '',
+          question_choice_A: '',
+          question_choice_B: '',
+          question_choice_C: '',
+          question_choice_D: ''
+        }]);
+        setCurrentQuestion(preview.length);
+        alert('Question inserted successfully!');
+      } else {
+        alert('Failed to insert question.');
+      }
+    } catch (error) {
+      console.error('Error inserting question:', error);
+    }
+  };
 
   const currentQ = preview[currentQuestion];
 
@@ -160,20 +213,42 @@ function ExamEditor() {
       
       <div className={styles.examHeader}>
         <div className={styles.sectionInfo}>
-          <h2>Section {currentQ[`section_id`]}, Module {currentQ[`module_id`]}: 
-            <select
-              className={styles.selectInput}
-              id="module"
-              name="module"
-              value={currentQ[`module_name`]}
-              required
-            >
-              <option value="" disabled>Select a Module</option>
-              <option value="Reading and Writing">Reading & Writing</option>
-              <option value="Math">Math</option>
-            </select>
-          </h2>
-          <button className={styles.hideButton}>Hide</button>
+          <select
+            className={styles.selectInput}
+            value={currentQ.section_id}
+            onChange={(e) => handleSectionChange(e.target.value)}
+          >
+            <option value="">Select Section</option>
+            <option value="1">Section 1</option>
+            <option value="2">Section 2</option>
+          </select>
+
+          <select
+            className={styles.selectInput}
+            value={currentQ.module_id}
+            onChange={(e) => handleChange('module_id', e.target.value)}
+            disabled={!currentQ.section_id}
+          >
+            <option value="">Select Module</option>
+            {currentQ.section_id === '1' ? (
+              <>
+                <option value="1">Module 1: Reading & Writing</option>
+                <option value="2">Module 2: Reading & Writing</option>
+              </>
+            ) : currentQ.section_id === '2' ? (
+              <>
+                <option value="1">Module 1: Math</option>
+                <option value="2">Module 2: Math</option>
+              </>
+            ) : null}
+          </select>
+
+          <button 
+            className={styles.insertButton}
+            onClick={handleInsertQuestion}
+          >
+            Add Question
+          </button>
         </div>
         <div className={styles.examTools}>
           <div className={styles.timer}></div>

@@ -705,16 +705,28 @@ td {
 }
 
 .studentList {
-  margin: 1rem 0;
   max-height: 300px;
   overflow-y: auto;
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
 }
 
 .studentItem {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5rem;
   padding: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.studentItem:hover {
+  background-color: #f5f5f5;
+}
+
+.studentItem input[type="checkbox"] {
   cursor: pointer;
 }
 

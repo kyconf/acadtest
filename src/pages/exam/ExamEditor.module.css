@@ -27,7 +27,8 @@
   .sectionInfo {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 10px;
+    margin-bottom: 20px;
   }
   
   .sectionInfo h2 {
@@ -223,14 +224,33 @@
   }
 
   .selectInput {
-
-    max-width: 200px;
-    padding: 8px 12px;
-    border: 1px solid #e5e5e5;
+    padding: 8px;
+    margin-right: 10px;
+    border: 1px solid #ddd;
     border-radius: 4px;
     background-color: white;
-    font-size: 14px;
-    
+  }
+
+  .numberInput {
+    padding: 8px;
+    margin-right: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 150px;
+    background-color: white;
+  }
+
+  .insertButton {
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .insertButton:hover {
+    background-color: #45a049;
   }
 
   form {

@@ -16,32 +16,20 @@ import {
 function StudentDashboard() {
   const navigate = useNavigate();
   const [assignedExams, setAssignedExams] = useState([]);
+  const currentUserId = 1; // We'll keep this for now, but ideally should come from auth
 
-  // Add the fetchAssignedExams function
-  const fetchAssignedExams = async (examIds) => {
+  // Fetch assigned exams from the database
+  const fetchAssignedExams = async () => {
     try {
-      // For now, we'll use mock data since we're using local storage
-      const mockExams = [
-        { 
-          exam_id: 1, 
-          title: "SAT Practice Test 1", 
-          description: "Reading and Writing Section" 
-        },
-        { 
-          exam_id: 2, 
-          title: "SAT Practice Test 2", 
-          description: "Math Section" 
-        },
-        { 
-          exam_id: 3, 
-          title: "SAT Practice Test 3", 
-          description: "Full Test" 
-        }
-      ];
-
-      // Filter mock exams based on assigned exam IDs
-      const userExams = mockExams.filter(exam => 
-        examIds.includes(exam.exam_id.toString())
+      const response = await fetch(`${API_URL}/exams`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch exams');
+      }
+      const exams = await response.json();
+      
+      // Filter exams assigned to the current student
+      const userExams = exams.filter(exam => 
+        exam.assigned_to === currentUserId
       );
       
       setAssignedExams(userExams);
@@ -51,17 +39,7 @@ function StudentDashboard() {
   };
 
   useEffect(() => {
-    // Get assignments from local storage
-    const assignments = JSON.parse(localStorage.getItem('examAssignments') || '{}');
-    const currentUserId = 1; // Mock current student ID
-    
-    // Get all exams that are assigned to this student
-    const userAssignedExams = Object.entries(assignments)
-      .filter(([_, assignment]) => assignment.students.includes(currentUserId))
-      .map(([examId]) => examId);
-
-    // Fetch exam details for assigned exams
-    fetchAssignedExams(userAssignedExams);
+    fetchAssignedExams();
   }, []);
 
   const startExam = (examId) => {
@@ -95,6 +73,7 @@ function StudentDashboard() {
               <div key={exam.exam_id} className={styles.examCard}>
                 <h3>{exam.title}</h3>
                 <p>{exam.description}</p>
+                <p>Duration: {exam.duration} minutes</p>
                 <button onClick={() => startExam(exam.exam_id)}>
                   Start Exam
                 </button>

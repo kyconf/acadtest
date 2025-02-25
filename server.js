@@ -58,13 +58,12 @@ app.get('/login', async (req, res) =>  { //gets the info
 });
 
 
-app.get('/preview-exams/:examId', async (req, res) =>  { //gets the info
+app.get('/preview-exams/:examId', async (req, res) => {
   try {
-    // Fetch data from the database
-    console.log("Fetching exams...");
-    const exams = await getPreviewExams();
+    const { examId } = req.params;
+    console.log("Fetching exams for examId:", examId);
+    const exams = await getPreviewExams(examId);
     res.json(exams);
-    
   } catch (error) {
     console.error('Error fetching exams:', error);
     res.status(500).json({
@@ -78,29 +77,11 @@ app.get('/preview-exams/:examId', async (req, res) =>  { //gets the info
 
 app.get('/exams', async (req, res) =>  { //gets the info
   try {
-    // Fetch data from the database
-    console.log("Fetching exams...");
     const exams = await getExams();
-    
-
-    // Combine with the stored OpenAI JSON response
-    const combinedExams = [...exams, ...lastResponse]; // Merge the two arrays
-
-    // Optional: Remove duplicates based on 'exam_id'
-    const uniqueExams = combinedExams.filter(
-      (exam, index, self) =>
-        index === self.findIndex((e) => e.exam_id === exam.exam_id)
-    );
-
-    // Send the combined response
-    res.status(200).json(uniqueExams);
+    res.json(exams);
   } catch (error) {
     console.error('Error fetching exams:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to fetch exams.',
-      error: error.message,
-    });
+    res.status(500).json({ message: 'Failed to fetch exams' });
   }
 });
 
@@ -316,64 +297,59 @@ db.on('error', function(err) {
 
   async function getExams() {
     try {
-        const [rows] = await db.query(`
-            SELECT 
-                exam_id, 
-                title, 
-                description, 
-                assigned_to,  
-                DATE_FORMAT(created_at, '%Y-%m-%d %H:%i:%s') AS created_at, 
-                duration 
-            FROM exams
-            ORDER BY created_at ASC
-            LIMIT 100
-        `);
-        return rows;
+      const [rows] = await db.execute(`
+        SELECT 
+          exam_id,
+          title,
+          description,
+          assigned_to,
+          duration
+        FROM 
+          exams
+        ORDER BY 
+          exam_id ASC
+      `);
+      return rows;
     } catch (error) {
-        console.error('Error in getExams:', error);
-        throw error;
+      console.error('Error in getExams:', error);
+      throw error;
     }
   }
 
-  async function getPreviewExams() {
-    try {
-        const [rows] = await db.execute(`
-            SELECT 
-              exams.exam_id,
-              exams.title AS exam_title,
-              exams.description AS exam_description,
-              sections.section_id,
-              sections.number AS section_number,
-              modules.module_id,
-              modules.number AS module_number,
-              modules.module_name AS module_name,
-              questions.id AS question_id,
-              questions.passage AS question_passage,
-              questions.prompt AS question_prompt,
-              questions.number AS question_number,
-              questions.choice_A as question_choice_A,
-              questions.choice_B as question_choice_B,
-              questions.choice_C as question_choice_C,
-              questions.choice_D as question_choice_D,
-              questions.correct_answer AS correct_answer
-            FROM 
-                exams
-            INNER JOIN 
-                sections ON exams.exam_id = sections.exam_id
-            INNER JOIN 
-                modules ON sections.section_id = modules.section_id
-            INNER JOIN 
-                questions ON modules.module_id = questions.module
-            WHERE 
-                exams.exam_id = 1 AND
-                sections.section_id = 1 AND
-                modules.module_id = 1;
-        `);
-        return rows;
-    } catch (error) {
-        console.error('Error in getExams:', error);
-        throw error;
-    }
+  async function getPreviewExams(examId) {
+    const [rows] = await db.execute(`
+      SELECT 
+        exams.exam_id,
+        exams.title AS exam_title,
+        exams.description AS exam_description,
+        sections.section_id,
+        sections.number AS section_number,
+        modules.module_id,
+        modules.module_name AS module_name,
+        questions.id AS question_id,
+        questions.prompt AS question_prompt,
+        questions.number AS question_number,
+        questions.passage as question_passage,
+        questions.choice_A as question_choice_A,
+        questions.choice_B as question_choice_B,
+        questions.choice_C as question_choice_C,
+        questions.choice_D as question_choice_D,
+        questions.correct_answer AS correct_answer
+      FROM 
+        exams
+      INNER JOIN 
+        sections ON exams.exam_id = sections.exam_id
+      INNER JOIN 
+        modules ON sections.section_id = modules.section_id
+      INNER JOIN 
+        questions ON modules.module_id = questions.module_id
+      WHERE 
+        exams.exam_id = ?
+      ORDER BY
+        questions.number ASC
+    `, [examId]);
+
+    return rows;
   }
 
   async function testConnection() {
@@ -530,12 +506,55 @@ async function updateExam(
 }
 
 
-async function createExam(title, description, duration) { //get specific user by putting a parameter
-  const result = await db.query(`
-      INSERT INTO exams (title, description, duration)
-      VALUES (?, ?, ?)
-       `, [title, description, duration]); // make sure its the same name in mysql
-  return result;
+async function createExam(title, description, duration) {
+  let connection;
+  try {
+    connection = await db.getConnection();
+    await connection.beginTransaction();
+
+    // Insert the exam
+    const [examResult] = await connection.execute(
+      `INSERT INTO exams (title, description, duration)
+       VALUES (?, ?, ?)`,
+      [title, description, duration]
+    );
+    const examId = examResult.insertId;
+
+    // Insert default section
+    const [sectionResult] = await connection.execute(
+      `INSERT INTO sections (exam_id, number)
+       VALUES (?, ?)`,
+      [examId, 1]
+    );
+    const sectionId = sectionResult.insertId;
+
+    // Insert default module
+    const [moduleResult] = await connection.execute(
+      `INSERT INTO modules (section_id, number, module_name)
+       VALUES (?, ?, ?)`,
+      [sectionId, 1, 'Reading and Writing']
+    );
+    const moduleId = moduleResult.insertId;
+
+    // Insert empty question
+    await connection.execute(
+      `INSERT INTO questions (section, module, number, passage, prompt, choice_A, choice_B, choice_C, choice_D, correct_answer)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [sectionId, moduleId, 1, '', '', '', '', '', '', '']
+    );
+
+    await connection.commit();
+    return examResult;
+  } catch (error) {
+    if (connection) {
+      await connection.rollback();
+    }
+    throw error;
+  } finally {
+    if (connection) {
+      connection.release();
+    }
+  }
 }
 
 // Add exam assignment endpoint
